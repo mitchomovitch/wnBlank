@@ -1,0 +1,52 @@
+<!--
+  Generated template for the WineCreate page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Ajouter une nouvelle note</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="takePicture()">
+        <ion-icon name="camera"></ion-icon>
+        </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <ion-item>
+    <ion-label floating>Nom</ion-label>
+    <ion-input [(ngModel)]="wine.nom" type="text" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Année</ion-label>
+    <ion-datetime displayFormat="YYYY" pickerFormat="YYYY" [(ngModel)]="wine.annee"></ion-datetime>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Code barre</ion-label>
+    <ion-input [(ngModel)]="wine.codebarre" type="text" ></ion-input>
+    <button item-right ion-button icon-only (click)="scan()"><ion-icon name="barcode"></ion-icon></button>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Prix</ion-label>
+    <ion-input [(ngModel)]="wine.prix" type="number" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Revendeur</ion-label>
+    <ion-input [(ngModel)]="wine.vendeur" type="text" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Mes commentaires</ion-label>
+    <ion-textarea [(ngModel)]="wine.note" type="text" ></ion-textarea>
+  </ion-item>
+
+</ion-content>

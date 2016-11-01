@@ -1,0 +1,7 @@
+npm install firebase --save
+
+NOTE ON RC1: Usually the types ecosystem is strong and all you need to do is go npm install @types/package_name to get it working, but Firebase hasn’t updated their type definition to 3.x and they’re still using 2.4.x that’s for the old console.
+
+So you’ll need to do a little hack to get this to work, I hope to remove this section soon
+
+ionic plugin add cordova-plugin-camera

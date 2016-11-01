@@ -1,0 +1,58 @@
+<!--
+  Generated template for the WineDetail page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Détail de ma note</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="takePicture()">
+        <ion-icon name="camera"></ion-icon>
+        </button>
+    </ion-buttons>
+  </ion-navbar>
+  
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-item>
+    <ion-label floating>Nom</ion-label>
+    <ion-input [(ngModel)]="currentWine.nom" type="text" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Année</ion-label>
+    <ion-datetime displayFormat="YYYY" pickerFormat="YYYY" [(ngModel)]="currentWine.annee"></ion-datetime>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Code barre</ion-label>
+    <ion-input [(ngModel)]="currentWine.codebarre" type="text" ></ion-input>
+    <button item-right ion-button icon-only (click)="scan()"><ion-icon name="barcode"></ion-icon></button>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Prix</ion-label>
+    <ion-input [(ngModel)]="currentWine.prix" type="number" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Revendeur</ion-label>
+    <ion-input [(ngModel)]="currentWine.vendeur" type="text" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Mes commentaires</ion-label>
+    <ion-textarea [(ngModel)]="currentWine.note" type="text" ></ion-textarea>
+  </ion-item>
+
+  <ion-item>
+      <img [src]="currentWine.photoUrl" *ngIf="currentWine.photoUrl"/>   
+  </ion-item>
+
+</ion-content>

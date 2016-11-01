@@ -1,14 +1,42 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary" >
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-title>
-      Ionic Blank
+      WineNotes Nouméa
     </ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="searchWine()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
-</ion-content>
+<ion-content>
+  
+  <ion-card *ngFor="let wine of wineList" (click)="goToWineDetail(wine.id)">
+    <ion-card-content>
+      <ion-card-title>
+        <h2>{{wine.nom}} {{wine.annee}}</h2>
+      </ion-card-title>
+      <p>
+        {{wine.note}}
+      </p>
+    </ion-card-content>
+    <img [src]="wine.photoUrl" *ngIf="wine.photoUrl">
+  </ion-card> 
+  </ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary" >
+    <button ion-button color="light" clear (click)="createWine()">Créer une note ...</button>
+    
+    <ion-buttons end>
+      <button ion-button large (click)="takePicture()">   
+        <ion-icon name="camera"></ion-icon>
+      </button> 
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

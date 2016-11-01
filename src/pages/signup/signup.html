@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      Créer un compte
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="takePicture()">
+        <ion-icon name="camera"></ion-icon>
+        </button>
+    </ion-buttons>
+    
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <form [formGroup]="signupForm" (submit)="signupUser()" novalidate>
+    <ion-item>
+      <ion-label stacked>Pseudo</ion-label>
+      <ion-input #pseudo formControlName="pseudo" type="pseudo" (change)="elementChanged(pseudo)"
+        placeholder="Votre pseudonyme"
+        [class.invalid]="!signupForm.controls.pseudo.valid && (pseudoChanged || submitAttempt)"></ion-input>
+    </ion-item>  
+    <ion-item class="error-message" *ngIf="!signupForm.controls.pseudo.valid  && (pseudoChanged || submitAttempt)">
+                <p>Ne doit contenir que des lettres ou chiffres</p>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label stacked>Email</ion-label>
+      <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)"
+        placeholder="Votre adresse mail"
+        [class.invalid]="!signupForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
+    </ion-item>
+    <ion-item class="error-message" *ngIf="!signupForm.controls.email.valid  && (emailChanged || submitAttempt)">
+      <p>Merci de renseigner un email valide.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label stacked>Mot de passe</ion-label>
+      <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)"
+        placeholder="Votre mot de passe (min 7 caractères)"
+        [class.invalid]="!signupForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
+    </ion-item>
+    <ion-item class="error-message" *ngIf="!signupForm.controls.password.valid  && (passwordChanged || submitAttempt)">
+      <p>Votre mot de passe doit avoir plus de 6 caractères.</p>
+    </ion-item>
+
+    <button ion-button block type="submit">
+      Créer le compte
+    </button>
+
+  </form>
+
+</ion-content>

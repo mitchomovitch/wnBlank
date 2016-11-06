@@ -6,10 +6,10 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>Détail de ma note</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="takePicture()">
+      <button ion-button icon-only (click)="openMenuPhoto()">
         <ion-icon name="camera"></ion-icon>
         </button>
     </ion-buttons>
@@ -20,6 +20,14 @@
 
 
 <ion-content padding>
+  <ion-item>
+    <ion-range min="0" max="10" step="1" [(ngModel)]="currentWine.score">
+      <ion-label range-left class="range-label">Note : {{currentWine.score}}/10</ion-label>
+      <ion-icon small range-left name="remove"></ion-icon>
+      <ion-icon range-right name="add"></ion-icon>
+   </ion-range>
+  </ion-item>
+
   <ion-item>
     <ion-label floating>Nom</ion-label>
     <ion-input [(ngModel)]="currentWine.nom" type="text" ></ion-input>
@@ -33,7 +41,7 @@
   <ion-item>
     <ion-label floating>Code barre</ion-label>
     <ion-input [(ngModel)]="currentWine.codebarre" type="text" ></ion-input>
-    <button item-right ion-button icon-only (click)="scan()"><ion-icon name="barcode"></ion-icon></button>
+    <button item-right ion-button clear icon-only (click)="scan()"><ion-icon name="barcode"></ion-icon></button>
   </ion-item>
 
   <ion-item>
@@ -44,15 +52,17 @@
   <ion-item>
     <ion-label floating>Revendeur</ion-label>
     <ion-input [(ngModel)]="currentWine.vendeur" type="text" ></ion-input>
+    <button item-right ion-button  clear icon-only (click)="searchResellerByName()"><ion-icon name="search"></ion-icon></button>
   </ion-item>
 
   <ion-item>
     <ion-label floating>Mes commentaires</ion-label>
     <ion-textarea [(ngModel)]="currentWine.note" type="text" ></ion-textarea>
   </ion-item>
+  
 
   <ion-item>
-      <img [src]="currentWine.photoUrl" *ngIf="currentWine.photoUrl"/>   
+      <img [src]="currentWine.photoPath" *ngIf="currentWine.photoPath"/>   
   </ion-item>
 
 </ion-content>

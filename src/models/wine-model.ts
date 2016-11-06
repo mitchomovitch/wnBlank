@@ -6,6 +6,11 @@ export class WineModel {
     public vendeur:string;
     public note:string;
     public photoUrl:string;
+    public photoName:string;
+    public photoPath:string;
+    public id:string;
+    public time:number;
+    public score:number;
     constructor(){ 
         
     } 

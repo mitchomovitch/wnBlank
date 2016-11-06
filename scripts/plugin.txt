@@ -5,3 +5,7 @@ NOTE ON RC1: Usually the types ecosystem is strong and all you need to do is go 
 So you’ll need to do a little hack to get this to work, I hope to remove this section soon
 
 ionic plugin add cordova-plugin-camera
+
+
+appscript needed :
+$ npm install @ionic/app-scripts@beta --save

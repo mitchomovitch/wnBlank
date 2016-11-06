@@ -1,3 +1,9 @@
+import { ResellerDetailPage } from './../pages/reseller-detail/reseller-detail';
+import { ConnectivityService } from './../providers/connectivity-service';
+import { ResellerData } from './../providers/reseller-data';
+import { ResellerMapPage } from './../pages/reseller-map/reseller-map';
+import { ResellerListPage } from './../pages/reseller-list/reseller-list';
+import { ResellerCreatePage } from './../pages/reseller-create/reseller-create';
 import { WineCreatePage } from './../pages/wine-create/wine-create';
 import { WineDetailPage } from './../pages/wine-detail/wine-detail';
 import { WineData } from './../providers/wine-data';
@@ -20,7 +26,11 @@ import { HomePage } from '../pages/home/home';
     SignupPage,
     ResetPasswordPage,
     WineDetailPage,
-    WineCreatePage
+    WineCreatePage,
+    ResellerCreatePage,
+    ResellerDetailPage,
+    ResellerListPage,
+    ResellerMapPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -34,8 +44,12 @@ import { HomePage } from '../pages/home/home';
     SignupPage,
     ResetPasswordPage,
     WineDetailPage,
-    WineCreatePage
+    WineCreatePage,
+    ResellerCreatePage,
+    ResellerDetailPage,
+    ResellerListPage,
+    ResellerMapPage
   ],
-  providers: [AuthData,WineData]
+  providers: [AuthData,WineData,ResellerData,ConnectivityService]
 })
 export class AppModule {}

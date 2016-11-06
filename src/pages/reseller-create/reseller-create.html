@@ -1,0 +1,53 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Ajouter un revendeur</ion-title>
+    <ion-buttons end>
+
+      <button ion-button icon-only (click)="locate()">
+        <ion-icon name="locate"></ion-icon>
+      </button>
+
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+
+  <ion-item>
+    <ion-label floating>Nom</ion-label>
+    <ion-input [(ngModel)]="reseller.nom" type="text" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Téléphone</ion-label>
+    <ion-input [(ngModel)]="reseller.tel" type="number" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Portable</ion-label>
+    <ion-input [(ngModel)]="reseller.mobile" type="number" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Horaire</ion-label>
+    <ion-input [(ngModel)]="reseller.horaire" type="number" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Adresse</ion-label>
+    <ion-input [(ngModel)]="reseller.adresse" type="text" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>GPS Latitude</ion-label>
+    <ion-input [(ngModel)]="reseller.gpsX" type="number" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>GPS Longitude</ion-label>
+    <ion-input [(ngModel)]="reseller.gpsY" type="number" ></ion-input>
+  </ion-item>
+
+</ion-content>

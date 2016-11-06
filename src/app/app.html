@@ -1,0 +1,49 @@
+<ion-menu [content]="content" side="left" >
+
+  <ion-toolbar color="light" color="danger">
+    <ion-title>Menu</ion-title>
+  </ion-toolbar>
+
+  <ion-content>
+
+    <ion-list no-lines>
+      <button ion-item (click)="selectMenu()">
+        Mon compte
+      </button>
+      <ion-item-divider>
+        Libellés
+      </ion-item-divider>
+      <!--<button ion-item *ngFor="let p of searchPage" (click)="openPage(p)">
+        {{p.title}}
+      </button>-->
+      <button ion-item (click)="selectMenu()">
+        Rouge
+      </button>
+      <button ion-item (click)="selectMenu()">
+        Blanc
+      </button>
+      <button ion-item (click)="selectMenu()">
+        Rosé
+      </button>
+      <ion-item-divider>
+      </ion-item-divider>
+      <button ion-item (click)="selectMenu()">
+        Archive
+      </button>
+      <button ion-item (click)="selectMenu()">
+        Corbeille
+      </button>
+      <ion-item-divider>
+      </ion-item-divider>
+      <button ion-item (click)="selectMenu()">
+        Paramètres
+      </button>
+      <button ion-item (click)="selectMenu()">
+        Aides et commentaires
+      </button>
+    </ion-list>
+  </ion-content>
+
+</ion-menu>
+
+<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

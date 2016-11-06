@@ -1,8 +1,12 @@
+import { ResellerMapPage } from './../reseller-map/reseller-map';
+import { ResellerListPage } from './../reseller-list/reseller-list';
+import { ResellerCreatePage } from './../reseller-create/reseller-create';
 import { WineData } from './../../providers/wine-data';
 import { Component } from '@angular/core';
-import { NavController, NavParams  } from 'ionic-angular';
-import { Camera, BarcodeScanner } from 'ionic-native';
+import { NavController, NavParams,ActionSheetController  } from 'ionic-angular';
+import { BarcodeScanner } from 'ionic-native';
 
+declare var cordova;
 /*
   Generated class for the WineDetail page.
 
@@ -15,12 +19,16 @@ import { Camera, BarcodeScanner } from 'ionic-native';
 })
 export class WineDetailPage {
   currentWine: any;
-  winePhoto: any = null;
-  constructor(public nav: NavController, public navParams: NavParams, public wineData: WineData) {
+  constructor(public nav: NavController, public navParams: NavParams, public actionsheetCtrl: ActionSheetController, 
+  public wineData: WineData) {
     this.navParams = navParams;
 
     this.wineData.getWineDetail(this.navParams.get('wineId')).on('value', (snapshot) => {
       this.currentWine = snapshot.val();
+      this.currentWine.id=snapshot.key;
+      if(this.currentWine.photoName!=null){
+          this.currentWine.photoPath=cordova.file.dataDirectory+this.currentWine.photoName;
+      } 
     });
   }
 
@@ -29,25 +37,8 @@ export class WineDetailPage {
   }
 
   ionViewWillLeave() {
-      this.wineData.updateWine(this.currentWine,this.winePhoto).then( () => {
+      this.wineData.updateWine(this.currentWine).then( () => {
       });
-  }
-
-  takePicture(){
-    Camera.getPicture({
-      quality : 50,
-      destinationType : Camera.DestinationType.DATA_URL,
-      sourceType : Camera.PictureSourceType.CAMERA,
-      allowEdit : true,
-      encodingType: Camera.EncodingType.PNG,
-      targetWidth: 400,
-      targetHeight: 600,
-      saveToPhotoAlbum: false
-    }).then(imageData => {
-      this.winePhoto = imageData;
-    }, error => {
-      console.log("ERROR -> " + JSON.stringify(error));
-    });
   }
 
   scan(){
@@ -57,6 +48,59 @@ export class WineDetailPage {
     }, (err) => {
         console.log("ERROR -> " + JSON.stringify(err));
     });
+  }
+
+  openMenuPhoto() {
+    let actionSheet = this.actionsheetCtrl.create({
+      title: 'Photo',
+      cssClass: 'action-sheets-basic-page',
+      buttons: [
+        {
+          text: 'Prendre une photo',
+          icon: 'camera',
+          handler: () => {
+            this.takePicture();
+          }
+        },
+        {
+          text: 'Choisir une photo',
+          icon: 'images',
+          handler: () => {
+            this.openPhotoLibrary();
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+  }
+
+  takePicture(){
+    this.wineData.takePicture(1).then(success=>{
+      let name = success.nativeURL.replace(/^.*[\\\/]/, '');
+      this.currentWine.photoName=name;
+      this.currentWine.photoPath=success.nativeURL;
+    });
+  }
+
+
+  openPhotoLibrary(){
+    this.wineData.takePicture(0).then(success=>{
+      let name = success.nativeURL.replace(/^.*[\\\/]/, '');
+      this.currentWine.photoName=name;
+      this.currentWine.photoPath=success.nativeURL;
+    });
+  }
+
+  addReseller(){
+    this.nav.push(ResellerCreatePage);
+  }
+
+  searchResellerByName(){
+    this.nav.push(ResellerListPage);
+  }
+
+  searchResellerByMap(){
+    this.nav.push(ResellerMapPage);
   }
 
 }

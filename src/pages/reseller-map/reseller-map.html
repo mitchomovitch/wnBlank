@@ -8,13 +8,23 @@
   <ion-navbar color="primary">
     <ion-title>
       Carte
-    </ion-title>
+    </ion-title> 
     <ion-buttons end>
-      <button ion-button (click)="addReseller()"><ion-icon name="add"></ion-icon>Add Marker</button>
-    </ion-buttons>  
+
+      <button ion-button icon-only (click)="locate()">
+        <ion-icon name="locate"></ion-icon>
+      </button>
+
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
  
 <ion-content class="reseller-map">
   <div id="map_canvas"></div>  
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary" >
+    <button ion-button color="light" clear (click)="addReseller()">Ajouter un revendeur...</button> 
+  </ion-toolbar>
+</ion-footer>

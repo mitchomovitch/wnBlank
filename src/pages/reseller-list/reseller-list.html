@@ -21,7 +21,12 @@
   
   <ion-card *ngFor="let reseller of resellerList" (click)="goToResellerDetail(reseller.id)">
     <ion-card-content>
-      {{reseller.nom}} {{reseller.horaire}}
+      <ion-card-title>
+        <h2>{{reseller.nom}}</h2>
+      </ion-card-title>
+      <p>
+        {{reseller.horaire}}
+      </p>
     </ion-card-content>
   </ion-card> 
 </ion-content>

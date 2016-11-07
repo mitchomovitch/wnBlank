@@ -17,7 +17,7 @@ import { Geolocation } from 'ionic-native';
 export class ResellerDetailPage {
   public reseller:ResellerModel;
 
-  constructor(public navCtrl: NavController,public navParams: NavParams, 
+  constructor(public nav: NavController,public navParams: NavParams, 
   public resellerData:ResellerData) {
     this.navParams = navParams;
 
@@ -44,6 +44,12 @@ export class ResellerDetailPage {
     }, (err) => {
       console.log('Geoloaction:'+err);
     });
+  }
+
+  removeReseller(){
+    console.log("delete notes");
+    this.resellerData.removeReseller(this.reseller);
+    this.nav.pop();
   }
 
 }

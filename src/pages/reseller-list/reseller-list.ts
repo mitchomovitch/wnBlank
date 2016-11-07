@@ -47,13 +47,18 @@ export class ResellerListPage {
   }
 
   searchResellerByMap(){
-    this.nav.push(ResellerMapPage);
+    this.nav.push(ResellerMapPage,{
+      resellerList: this.resellerList
+    });
   }
 
-    goToResellerDetail(resellerId){
-    this.nav.push(ResellerDetailPage, {
-      resellerId: resellerId,
-    });
+  goToResellerDetail(resellerId){
+    if(this.resellerList!==null){
+      this.nav.push(ResellerDetailPage, {
+        resellerId: resellerId
+      });
+    }
+    
   }
 
 }

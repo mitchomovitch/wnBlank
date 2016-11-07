@@ -15,8 +15,8 @@
 </ion-header>
 
 <ion-content>
-  
   <ion-card *ngFor="let wine of wineList" (click)="goToWineDetail(wine.id)">
+    <img [src]="wine.photoPath" *ngIf="wine.photoPath">
     <ion-card-content>
       <ion-card-title>
         <h2>{{wine.nom}} {{wine.annee}}</h2>
@@ -25,8 +25,8 @@
         {{wine.note}}
       </p>
     </ion-card-content>
-    <img [src]="wine.photoPath" *ngIf="wine.photoPath">
-  </ion-card> 
+    
+  </ion-card>
   </ion-content>
 
 <ion-footer>

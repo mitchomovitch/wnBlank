@@ -19,6 +19,7 @@ declare var cordova;
 })
 export class WineDetailPage {
   currentWine: any;
+  public isDeleted: boolean;
   constructor(public nav: NavController, public navParams: NavParams, public actionsheetCtrl: ActionSheetController, 
   public wineData: WineData) {
     this.navParams = navParams;
@@ -26,6 +27,7 @@ export class WineDetailPage {
     this.wineData.getWineDetail(this.navParams.get('wineId')).on('value', (snapshot) => {
       this.currentWine = snapshot.val();
       this.currentWine.id=snapshot.key;
+      this.isDeleted=false;
       if(this.currentWine.photoName!=null){
           this.currentWine.photoPath=cordova.file.dataDirectory+this.currentWine.photoName;
       } 
@@ -37,8 +39,12 @@ export class WineDetailPage {
   }
 
   ionViewWillLeave() {
+    console.log('Not deleted ?'+(!this.isDeleted));
+    if(!this.isDeleted){
       this.wineData.updateWine(this.currentWine).then( () => {
       });
+    }
+      
   }
 
   scan(){
@@ -91,6 +97,14 @@ export class WineDetailPage {
     });
   }
 
+  removeWine(){
+    console.log("delete notes");
+    
+    this.wineData.removeWine(this.currentWine);
+    this.isDeleted=true;
+    this.nav.pop();
+  }
+
   addReseller(){
     this.nav.push(ResellerCreatePage);
   }
@@ -102,5 +116,6 @@ export class WineDetailPage {
   searchResellerByMap(){
     this.nav.push(ResellerMapPage);
   }
+
 
 }

@@ -53,6 +53,22 @@ export class WineData {
     
   }
 
+  removeWine(wine:WineModel){
+    if(wine.photoUrl != null){
+      let currentName = wine.photoPath.replace(/^.*[\\\/]/, '');
+      this.winePictureRef.child(wine.id).child(currentName).delete().then(()=>{
+        console.log("delete storage "+wine.id);
+      }, (err) => {
+        console.log('err delete storage : '+err);
+      });
+    }
+    this.wineList.child(wine.id).remove(wine).then(()=>{
+        console.log("delete db wine ");
+      }, (err) => {
+        console.log('err delete db : '+err);
+      });
+  }
+
   savePhoto(wine:WineModel){
     //Grab the file name
     let currentName = wine.photoPath.replace(/^.*[\\\/]/, '');

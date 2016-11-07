@@ -49,4 +49,8 @@ export class ResellerData {
     
   }
 
+  removeReseller(reseller:ResellerModel){
+    this.resellerList.child(reseller.id).remove(reseller);
+  }
+
 }

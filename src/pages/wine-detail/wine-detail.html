@@ -21,6 +21,9 @@
 
 <ion-content padding>
   <ion-item>
+      <img [src]="currentWine.photoPath" *ngIf="currentWine.photoPath"/>   
+  </ion-item>
+  <ion-item>
     <ion-range min="0" max="10" step="1" [(ngModel)]="currentWine.score">
       <ion-label range-left class="range-label">Note : {{currentWine.score}}/10</ion-label>
       <ion-icon small range-left name="remove"></ion-icon>
@@ -61,8 +64,16 @@
   </ion-item>
   
 
-  <ion-item>
-      <img [src]="currentWine.photoPath" *ngIf="currentWine.photoPath"/>   
-  </ion-item>
+  
 
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary" >
+     <ion-buttons end>
+      <button ion-button large (click)="removeWine()">   
+        <ion-icon name="trash"></ion-icon>
+      </button> 
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

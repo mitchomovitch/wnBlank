@@ -32,7 +32,7 @@
 
   <ion-item>
     <ion-label floating>Horaire</ion-label>
-    <ion-input [(ngModel)]="reseller.horaire" type="number" ></ion-input>
+    <ion-input [(ngModel)]="reseller.horaire" type="text" ></ion-input>
   </ion-item>
 
   <ion-item>
@@ -51,3 +51,13 @@
   </ion-item>
 
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary" >
+     <ion-buttons end>
+      <button ion-button large (click)="removeReseller()">   
+        <ion-icon name="trash"></ion-icon>
+      </button> 
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

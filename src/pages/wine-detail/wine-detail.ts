@@ -18,17 +18,20 @@ declare var cordova;
   templateUrl: 'wine-detail.html'
 })
 export class WineDetailPage {
+  public wineList: any;
   currentWine: any;
   public isDeleted: boolean;
   constructor(public nav: NavController, public navParams: NavParams, public actionsheetCtrl: ActionSheetController, 
   public wineData: WineData) {
     this.navParams = navParams;
+    this.wineList=this.navParams.get('wineList');
 
     this.wineData.getWineDetail(this.navParams.get('wineId')).on('value', (snapshot) => {
       this.currentWine = snapshot.val();
       this.currentWine.id=snapshot.key;
       this.isDeleted=false;
       if(this.currentWine.photoName!=null){
+        console.log("evaluate photoPath");
           this.currentWine.photoPath=cordova.file.dataDirectory+this.currentWine.photoName;
       } 
     });
@@ -41,8 +44,8 @@ export class WineDetailPage {
   ionViewWillLeave() {
     console.log('Not deleted ?'+(!this.isDeleted));
     if(!this.isDeleted){
-      this.wineData.updateWine(this.currentWine).then( () => {
-      });
+      console.log('update wine detail');
+      this.wineData.updateWine(this.currentWine,this.wineList);
     }
       
   }
@@ -100,8 +103,9 @@ export class WineDetailPage {
   removeWine(){
     console.log("delete notes");
     
-    this.wineData.removeWine(this.currentWine);
+    this.wineData.removeWine(this.currentWine,this.wineList);
     this.isDeleted=true;
+    console.log("delete notes finish");
     this.nav.pop();
   }
 

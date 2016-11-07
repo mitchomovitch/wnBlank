@@ -4,7 +4,7 @@ import { ResellerCreatePage } from './../reseller-create/reseller-create';
 import { WineModel } from './../../models/wine-model';
 import { WineData } from './../../providers/wine-data';
 import { Component } from '@angular/core';
-import { NavController,ActionSheetController } from 'ionic-angular';
+import { NavController,ActionSheetController,NavParams } from 'ionic-angular';
 import { BarcodeScanner } from 'ionic-native';
 /*
   Generated class for the WineCreate page.
@@ -18,11 +18,13 @@ import { BarcodeScanner } from 'ionic-native';
 })
 export class WineCreatePage {
   wine:WineModel;
+  public wineList: any;
 
-  constructor(public nav: NavController, public actionsheetCtrl: ActionSheetController,public wineData: WineData) {
+  constructor(public navParams:NavParams,public nav: NavController, public actionsheetCtrl: ActionSheetController,public wineData: WineData) {
     this.nav = nav;
     this.wineData= wineData;
     this.wine = new WineModel();
+    this.wineList=this.navParams.get('wineList');
   }
 
   ionViewDidLoad() {
@@ -30,8 +32,7 @@ export class WineCreatePage {
   }
 
   ionViewWillLeave() {
-      this.wineData.createWine(this.wine).then( () => {
-      });
+      this.wineData.createWine(this.wine,this.wineList);
   }
 
   scan(){

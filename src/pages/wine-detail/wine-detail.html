@@ -19,7 +19,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding *ngIf="currentWine">
   <ion-item>
       <img [src]="currentWine.photoPath" *ngIf="currentWine.photoPath"/>   
   </ion-item>

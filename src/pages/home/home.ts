@@ -20,32 +20,22 @@ export class HomePage {
   public wineData:WineData, private ngZone:NgZone) {
     this.nav = nav;
     this.wineData = wineData;
-    this.wineData.getWineList().on('value', snapshot => {
-      this.ngZone.run(()=>{
-          console.log('Snapshot');
-          let rawList = [];
-          snapshot.forEach( snap => {
-            this.wineModel=snap.val();
-            this.wineModel.id=snap.key;
-            if(this.wineModel.photoName!=null){
-              this.wineModel.photoPath=cordova.file.dataDirectory+this.wineModel.photoName;
-            }       
-            rawList.push(this.wineModel); 
-          });
-          this.wineList = rawList;
-          });   
-    });
+    this.wineList = this.wineData.getWineList();;
+    
   }
 
   goToWineDetail(wineId){
     this.nav.push(WineDetailPage, {
       wineId: wineId,
+      wineList: this.wineList
     });
   }
 
   createWine(){
     console.log('createWine');
-    this.nav.push(WineCreatePage);
+    this.nav.push(WineCreatePage, {
+      wineList: this.wineList
+    });
   }
 
   searchWine(){
@@ -82,8 +72,7 @@ export class HomePage {
       let name = success.nativeURL.replace(/^.*[\\\/]/, '');
       wine.photoName=name;
       wine.photoPath=success.nativeURL;
-      this.wineData.createWine(wine).then( () => {
-      });
+      this.wineData.createWine(wine,this.wineList)
     });    
   }
 
@@ -93,10 +82,8 @@ export class HomePage {
       let name = success.nativeURL.replace(/^.*[\\\/]/, '');
       wine.photoName=name;
       wine.photoPath=success.nativeURL;
-      this.wineData.createWine(wine).then( () => {
-      });
+      this.wineData.createWine(wine,this.wineList)
     }); 
   }
-
 
 }

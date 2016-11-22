@@ -1,7 +1,7 @@
 import { ResellerData } from './../../providers/reseller-data';
 import { ResellerModel } from './../../models/reseller-model';
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 
 /*
@@ -16,9 +16,12 @@ import { Geolocation } from 'ionic-native';
 })
 export class ResellerCreatePage {
 
-  reseller:ResellerModel;
+  reseller:ResellerModel;public resellerList:any
 
-  constructor(public navCtrl: NavController, public resellerData:ResellerData) {
+  constructor(public nav: NavController,public navParams: NavParams, 
+  public resellerData:ResellerData) {
+    this.navParams = navParams;
+    this.resellerList=this.navParams.get('resellerList');
     this.resellerData=resellerData;
     this.reseller = new ResellerModel();
   }
@@ -28,17 +31,19 @@ export class ResellerCreatePage {
   }
 
   ionViewWillLeave() {
-      this.resellerData.createReseller(this.reseller).then( () => {
-      });
+      this.resellerData.createReseller(this.reseller, this.resellerList);
   }
 
   locate(){
     Geolocation.getCurrentPosition().then((position) => {
-      this.reseller.gpsX=position.coords.latitude;
-      this.reseller.gpsY=position.coords.longitude;
+      this.reseller.latlng=position.coords.latitude+","+position.coords.longitude;
     }, (err) => {
       console.log('Geoloaction:'+err);
     });
+
+  }
+
+  saveCloud(){
 
   }
 

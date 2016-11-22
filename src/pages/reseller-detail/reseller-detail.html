@@ -4,8 +4,8 @@
     <ion-title>Détail revendeur</ion-title>
     <ion-buttons end>
 
-      <button ion-button icon-only (click)="locate()">
-        <ion-icon name="locate"></ion-icon>
+      <button ion-button icon-only (click)="saveCloud()">
+        <ion-icon name="cloud-done"></ion-icon>
       </button>
 
     </ion-buttons>
@@ -13,50 +13,49 @@
 
 </ion-header>
 
-<ion-content padding>
+<ion-content padding *ngIf="reseller">
 
-  <ion-item>
-    <ion-label floating>Nom</ion-label>
-    <ion-input [(ngModel)]="reseller.nom" type="text" ></ion-input>
+  <ion-item  no-lines>
+    <ion-icon  item-left name="basket"></ion-icon>
+    <ion-input placeholder="Vendeur" [(ngModel)]="reseller.nom" type="text" ></ion-input>
   </ion-item>
 
-  <ion-item>
-    <ion-label floating>Téléphone</ion-label>
-    <ion-input [(ngModel)]="reseller.tel" type="number" ></ion-input>
+  <ion-item  no-lines>
+    <ion-icon  item-left name="call"></ion-icon>
+    <ion-input placeholder="Téléphone" [(ngModel)]="reseller.tel" type="number" ></ion-input>
   </ion-item>
 
-  <ion-item>
-    <ion-label floating>Portable</ion-label>
-    <ion-input [(ngModel)]="reseller.mobile" type="number" ></ion-input>
+  <ion-item  no-lines>
+    <ion-icon  item-left name="phone-portrait"></ion-icon>
+    <ion-input placeholder="Portable" [(ngModel)]="reseller.mobile" type="number" ></ion-input>
   </ion-item>
 
-  <ion-item>
-    <ion-label floating>Horaire</ion-label>
-    <ion-input [(ngModel)]="reseller.horaire" type="text" ></ion-input>
+  <ion-item  no-lines>
+    <ion-icon  item-left name="clock"></ion-icon>
+    <ion-textarea placeholder="Horaire" rows="2" [(ngModel)]="reseller.horaire" type="text" ></ion-textarea>
   </ion-item>
 
-  <ion-item>
-    <ion-label floating>Adresse</ion-label>
-    <ion-input [(ngModel)]="reseller.adresse" type="text" ></ion-input>
+  <ion-item  no-lines>
+    <ion-icon  item-left name="home"></ion-icon>
+    <ion-textarea placeholder="Adresse" rows="3" [(ngModel)]="reseller.adresse" type="text" ></ion-textarea>
   </ion-item>
 
-  <ion-item>
-    <ion-label floating>GPS Latitude</ion-label>
-    <ion-input [(ngModel)]="reseller.gpsX" type="number" ></ion-input>
+  <ion-item  no-lines>
+    <ion-icon  item-left name="locate"></ion-icon>
+    <ion-input placeholder="Gps" [(ngModel)]="reseller.latlng" type="string" ></ion-input>
   </ion-item>
 
-  <ion-item>
-    <ion-label floating>GPS Longitude</ion-label>
-    <ion-input [(ngModel)]="reseller.gpsY" type="number" ></ion-input>
-  </ion-item>
-
-</ion-content>
 
 <ion-footer>
-  <ion-toolbar color="primary" >
-     <ion-buttons end>
-      <button ion-button large (click)="removeReseller()">   
-        <ion-icon name="trash"></ion-icon>
+  <ion-toolbar color="light" >
+    <button ion-button clear (tap)="locate()">
+        <ion-icon name="locate" color="primary"></ion-icon>
+    </button>
+    <ion-title></ion-title>
+    
+    <ion-buttons end>
+      <button ion-button clear (tap)="removeReseller()">   
+        <ion-icon name="trash" color="primary"></ion-icon>
       </button> 
     </ion-buttons>
   </ion-toolbar>

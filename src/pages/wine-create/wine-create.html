@@ -7,60 +7,117 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>Ajouter un vin</ion-title>
+    <ion-title></ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="openMenuPhoto()">
-        <ion-icon name="camera"></ion-icon>
-        </button>
+      <button ion-button icon-only (click)="saveCloud()">
+        <ion-icon name="cloud-upload"></ion-icon>
+      </button>
     </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 <ion-content padding>
-  <ion-item>
-    <ion-range min="0" max="10" step="1" [(ngModel)]="wine.score">
-      <ion-label range-left class="range-label">Note : {{wine.score}}/10</ion-label>
-      <ion-icon small range-left name="remove"></ion-icon>
-      <ion-icon range-right name="add"></ion-icon>
-   </ion-range>
+  <img [src]="wine.photoPath" *ngIf="wine.photoPath"/>  
+
+  <ion-item no-lines *ngIf="!wine.photoPath">
+    <button item-left ion-button clear icon-only (click)="takePicture()"><ion-icon name="camera"></ion-icon></button>
+    <ion-label *ngIf="!wine.codebarre"> Prendre une photo</ion-label>
   </ion-item>
 
-  <ion-item>
-    <ion-label floating>Nom</ion-label>
-    <ion-input [(ngModel)]="wine.nom" type="text" ></ion-input>
+  <ion-item no-lines>
+    <ion-label><b>Rapport Qualité / Prix</b></ion-label>
+    <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score==0"></ion-icon>
+    <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==1"></ion-icon>
+    <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=2"></ion-icon>
+    <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==3"></ion-icon>
+    <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=4"></ion-icon>
+    <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==5"></ion-icon>
+    <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=6"></ion-icon>
+    <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==7"></ion-icon>
+    <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=8"></ion-icon>
+    <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==9"></ion-icon>
+    <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=10"></ion-icon>
+    <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<3"></ion-icon>
+    <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<5"></ion-icon>
+    <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<7"></ion-icon>
+    <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<9"></ion-icon>
   </ion-item>
-
-  <ion-item>
-    <ion-label floating>Année</ion-label>
-    <ion-datetime displayFormat="YYYY" pickerFormat="YYYY" [(ngModel)]="wine.annee"></ion-datetime>
-  </ion-item>
-
-  <ion-item>
-    <ion-label floating>Code barre</ion-label>
-    <ion-input [(ngModel)]="wine.codebarre" type="text" ></ion-input>
-    <button item-right ion-button clear icon-only (click)="scan()"><ion-icon large name="barcode"></ion-icon></button>
-  </ion-item>
-
-  <ion-item>
-    <ion-label floating>Prix</ion-label>
-    <ion-input [(ngModel)]="wine.prix" type="number" ></ion-input>
-    </ion-item>
-
-  <ion-item>
-    <ion-label floating>Revendeur</ion-label>
-    <ion-input [(ngModel)]="wine.vendeur" type="text" ></ion-input>
-    <button item-right ion-button clear icon-only (click)="searchResellerByName()"><ion-icon large name="map"></ion-icon></button>
   
+  <ion-range min="0" max="10" step="1" [(ngModel)]="wine.score" (ionChange)="elementChanged()">
+      <ion-icon small range-left name="star-outline"></ion-icon>
+      <ion-icon range-right name="star"></ion-icon>
+  </ion-range>
+
+  <ion-item no-lines>
+    <button item-left ion-button clear icon-only (click)="scan()"><ion-icon name="barcode"></ion-icon></button>
+    <ion-label *ngIf="!wine.codebarre"> Code barre</ion-label>
+    <ion-label *ngIf="wine.codebarre"> {{wine.codebarre}}</ion-label>
   </ion-item>
 
-  <ion-item>
-    <ion-label floating>Mes commentaires</ion-label>
-    <ion-textarea [(ngModel)]="wine.note" type="text" ></ion-textarea>
+  <ion-item no-lines>
+    <ion-icon  item-left name="square" *ngIf="!wine.color"></ion-icon>
+    <ion-icon  item-left name="square" color="primary" *ngIf="wine.color=='rouge'"></ion-icon>
+    <ion-icon  item-left name="square" color="rose" *ngIf="wine.color=='rose'"></ion-icon>
+    <ion-icon  item-left name="square" color="blanc" *ngIf="wine.color=='blanc'"></ion-icon>
+    <ion-select [(ngModel)]="wine.color" placeholder="Couleur" (ionChange)="elementChanged()">
+      <ion-option value="rouge" >Rouge</ion-option>
+      <ion-option value="rose">Rosé</ion-option>
+      <ion-option value="blanc">Blanc</ion-option>
+    </ion-select>
   </ion-item>
 
-  <ion-item>
-      <img [src]="wine.photoPath" *ngIf="wine.photoPath"/>   
+  <ion-item no-lines>
+    <ion-icon  item-left name="wine"></ion-icon>
+    <ion-input placeholder="Nom" [(ngModel)]="wine.nom" type="text" (change)="elementChanged()"></ion-input>
   </ion-item>
+
+  <ion-item no-lines>
+    <ion-icon  item-left name="calendar"></ion-icon>
+    <ion-label *ngIf="!wine.millesime"> Millésime</ion-label>
+    <ion-datetime displayFormat="YYYY" pickerFormat="YYYY" [(ngModel)]="wine.millesime" (ionChange)="elementChanged()" ></ion-datetime>
+  </ion-item>
+
+  <ion-item no-lines>
+    <ion-icon  item-left name="contact"></ion-icon>
+    <ion-input placeholder="Producteur" [(ngModel)]="wine.producteur" type="text" (change)="elementChanged()"></ion-input>
+  </ion-item>
+  <ion-item no-lines>
+    <ion-icon  item-left name="locate"></ion-icon>
+    <ion-input placeholder="Appellation" [(ngModel)]="wine.appellation" type="text" (change)="elementChanged()"></ion-input>
+  </ion-item>
+  <ion-item no-lines>
+    <ion-input placeholder="Région" [(ngModel)]="wine.region" type="text" (change)="elementChanged()"></ion-input>
+  </ion-item>
+   <ion-item no-lines>
+    <ion-input placeholder="Subdivision" [(ngModel)]="wine.subdivision" type="text" (change)="elementChanged()"></ion-input>
+  </ion-item>
+  
+
+  <ion-item no-lines>
+    <ion-icon  item-left name="usd"></ion-icon>
+    <ion-label *ngIf="wine.prixLast"> Dernier prix ajouté : {{wine.prixLast}}</ion-label>
+    <ion-label *ngIf="wine.prixMin"> Prix le plus bas : {{wine.prixMin}}</ion-label>
+  </ion-item>
+
+  <ion-item no-lines>
+    <ion-icon item-left name="paper"></ion-icon>
+    <ion-textarea placeholder="Remarques" rows="4"[(ngModel)]="wine.note" type="text" (change)="elementChanged()"></ion-textarea>
+  </ion-item>
+
 
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar color="light" >
+    <button ion-button clear (tap)="openMenuPhoto()">
+        <ion-icon name="add" color="primary"></ion-icon>
+    </button>
+    
+    <ion-buttons end>
+      <button ion-button clear (tap)="openMenuDetail()">   
+        <ion-icon name="more" color="primary"></ion-icon>
+      </button> 
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

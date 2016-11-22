@@ -4,7 +4,7 @@ import { ResellerDetailPage } from './../reseller-detail/reseller-detail';
 import { ResellerMapPage } from './../reseller-map/reseller-map';
 import { ResellerCreatePage } from './../reseller-create/reseller-create';
 import { Component,NgZone } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController,Events  } from 'ionic-angular';
 
 /*
   Generated class for the ResellerList page.
@@ -18,24 +18,14 @@ import { NavController } from 'ionic-angular';
 })
 export class ResellerListPage {
 
-  public resellerList: any;
+  public resellerList: any[];
   reseller: ResellerModel;
 
-  constructor(public nav: NavController, public resellerData:ResellerData, private ngZone:NgZone) {
+  constructor(public nav: NavController, public resellerData:ResellerData,
+   private ngZone:NgZone,public events: Events) {
     this.nav = nav;
     this.resellerData = resellerData;
-    this.resellerData.getResellerList().on('value', snapshot => {
-      this.ngZone.run(()=>{
-          console.log('Snapshot reseller');
-          let rawList = [];
-          snapshot.forEach( snap => {
-            this.reseller=snap.val();
-            this.reseller.id=snap.key;
-            rawList.push(this.reseller); 
-          });
-          this.resellerList = rawList;
-          });   
-    });
+    this.resellerList = this.resellerData.getResellerList();
   }
 
   ionViewDidLoad() {
@@ -43,7 +33,9 @@ export class ResellerListPage {
   }
 
   addReseller(){
-    this.nav.push(ResellerCreatePage);
+    this.nav.push(ResellerCreatePage, {
+        resellerList: this.resellerList
+      });
   }
 
   searchResellerByMap(){
@@ -53,11 +45,19 @@ export class ResellerListPage {
   }
 
   goToResellerDetail(resellerId){
+    console.log('goToResellerDetail '+resellerId);
     if(this.resellerList!==null){
       this.nav.push(ResellerDetailPage, {
-        resellerId: resellerId
+        resellerId: resellerId,
+        resellerList: this.resellerList
       });
     }
+    
+  }
+
+  selectReseller(reseller:ResellerModel){
+    this.events.publish('reseller:selected', reseller);
+    this.nav.pop();
     
   }
 

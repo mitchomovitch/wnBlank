@@ -7,32 +7,38 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>Caves</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="searchResellerByMap()">
-        <ion-icon name="map"></ion-icon>
-      </button>
-    </ion-buttons>
+    <ion-title> Vendeurs</ion-title>
   </ion-navbar>
 
 </ion-header>
 
-<ion-content>
-  
-  <ion-card *ngFor="let reseller of resellerList" (click)="goToResellerDetail(reseller.id)">
-    <ion-card-content>
-      <ion-card-title>
-        <h2>{{reseller.nom}}</h2>
-      </ion-card-title>
-      <p>
-        {{reseller.horaire}}
-      </p>
-    </ion-card-content>
-  </ion-card> 
+<ion-content no-lines>
+
+  <ion-list>   
+    <ion-item-sliding *ngFor="let reseller of resellerList">
+      <ion-item (click)="selectReseller(reseller)">
+
+            <p><b>{{reseller.nom}}</b></p>
+            <p>{{reseller.horaire}}</p>    
+      
+      </ion-item> 
+      <ion-item-options>
+        <button ion-button icon-only (click)="goToResellerDetail(reseller.id)">
+            <ion-icon name="more"></ion-icon>Détail
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar color="primary" >
-    <button ion-button color="light" clear (click)="addReseller()">Ajouter un revendeur...</button> 
+  <ion-toolbar color="light" >
+    <button ion-button clear (click)="addReseller()">Créer un vendeur ...</button>
+    
+    <ion-buttons end>
+      <button ion-button clear (tap)="searchResellerByMap()">   
+        <ion-icon name="pin" color="primary" ></ion-icon>
+      </button> 
+    </ion-buttons>
   </ion-toolbar>
 </ion-footer>

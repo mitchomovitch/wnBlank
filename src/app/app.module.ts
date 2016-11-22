@@ -1,3 +1,5 @@
+import { ClassementProfile } from './../providers/classement-profile';
+import { ProfileData } from './../providers/profile-data';
 import { ResellerDetailPage } from './../pages/reseller-detail/reseller-detail';
 import { ConnectivityService } from './../providers/connectivity-service';
 import { ResellerData } from './../providers/reseller-data';
@@ -16,6 +18,7 @@ import { NgModule } from '@angular/core';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { Storage } from '@ionic/storage';
 
 @NgModule({
   declarations: [
@@ -50,6 +53,6 @@ import { HomePage } from '../pages/home/home';
     ResellerListPage,
     ResellerMapPage
   ],
-  providers: [AuthData,WineData,ResellerData,ConnectivityService]
+  providers: [Storage,AuthData,ProfileData,WineData,ResellerData,ConnectivityService,ClassementProfile]
 })
 export class AppModule {}

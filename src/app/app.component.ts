@@ -2,7 +2,7 @@ import { LoginPage } from './../pages/login/login';
 import { Component, NgZone } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar} from 'ionic-native';
-
+import { Storage } from '@ionic/storage';
 import { HomePage } from '../pages/home/home';
 import firebase from 'firebase';
 
@@ -13,7 +13,7 @@ import firebase from 'firebase';
 export class MyApp {
   rootPage:any = LoginPage;
 
-  constructor(platform: Platform, private ngZone:NgZone) {
+  constructor(platform: Platform, private ngZone:NgZone, public storage:Storage) {
     firebase.initializeApp({
       apiKey: "AIzaSyCJm4-qfygYlGoguBOrZKykn4uMdkGmMJc",
       authDomain: "winenotes-8a11d.firebaseapp.com",
@@ -29,6 +29,15 @@ export class MyApp {
           }
           else {
             this.rootPage = LoginPage;
+          }
+      });
+      
+    });
+
+    storage.get('userProfile').then(userProfile=>{
+      this.ngZone.run(()=>{
+          if(userProfile){
+            this.rootPage = HomePage;
           }
       });
       

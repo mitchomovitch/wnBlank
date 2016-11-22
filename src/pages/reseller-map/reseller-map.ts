@@ -31,13 +31,14 @@ export class ResellerMapPage {
     this.resellerList=this.navParams.get('resellerList');
 
     this.platform.ready().then(() => {
-        if(this.connectivityService.isOnline()){
+      this.loadMap();
+        /*if(this.connectivityService.isOnline()){
             console.log("online, loading map");
             this.loadMap();
         }
         else {
             console.log("offLine, no loading map");
-        }
+        }*/
         
     });
   }
@@ -49,7 +50,7 @@ export class ResellerMapPage {
   
       let mapOptions = {
         center: latLng,
-        zoom: 14,
+        zoom: 13,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
   
@@ -81,12 +82,13 @@ export class ResellerMapPage {
     for(let i=0;i<this.resellerList.length;i++){
         this.reseller=this.resellerList[i];
         console.log("add reseller marker for :"+this.reseller.nom);
-        let latLng = new google.maps.LatLng(this.reseller.gpsX, this.reseller.gpsY);
-        console.log("latLng:"+JSON.stringify(latLng));
+        var latlngStr = this.reseller.latlng.split(',', 2);
+        var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+        console.log("latLng:"+JSON.stringify(latlng));
         let marker = new google.maps.Marker({
         map: this.map,
         animation: google.maps.Animation.DROP,
-        position: latLng,
+        position: latlng,
         title: this.reseller.nom
         });
 

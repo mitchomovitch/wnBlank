@@ -14,28 +14,46 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <ion-card *ngFor="let wine of wineList" (click)="goToWineDetail(wine.id)">
+
+
+<ion-content class="home">
+  <ion-card *ngFor="let wine of wineList" (click)="goToWineDetail(wine)">
     <img [src]="wine.photoPath" *ngIf="wine.photoPath">
-    <ion-card-content>
-      <ion-card-title>
-        <h2>{{wine.nom}} {{wine.annee}}</h2>
-      </ion-card-title>
-      <p>
-        {{wine.note}}
-      </p>
+    
+    <ion-card-content *ngIf="wine.nom">
+      <ion-item no-lines >
+        <b>{{wine.nom}} {{wine.millesime}}</b> 
+        <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score==0"></ion-icon>
+        <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==1"></ion-icon>
+        <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=2"></ion-icon>
+        <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==3"></ion-icon>
+        <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=4"></ion-icon>
+        <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==5"></ion-icon>
+        <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=6"></ion-icon>
+        <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==7"></ion-icon>
+        <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=8"></ion-icon>
+        <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==9"></ion-icon>
+        <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=10"></ion-icon>
+        <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<3"></ion-icon>
+        <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<5"></ion-icon>
+        <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<7"></ion-icon>
+        <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<9"></ion-icon>
+      </ion-item>
+      <ion-item no-lines *ngIf="wine.prix&&wine.vendeur">
+          <b>{{wine.prix}} CFP {{wine.vendeur}}</b> 
+      </ion-item>
     </ion-card-content>
     
   </ion-card>
   </ion-content>
 
 <ion-footer>
-  <ion-toolbar color="primary" >
-    <button ion-button color="light" clear (click)="createWine()">Créer une note ...</button>
+  <ion-toolbar color="light" >
+    <button ion-button clear (click)="createWine()">Créer une note ...</button>
     
     <ion-buttons end>
-      <button ion-button large (click)="openMenuPhoto()">   
-        <ion-icon name="camera"></ion-icon>
+      <button ion-button clear (tap)="openMenuPhoto()">   
+        <ion-icon name="camera" color="primary" ></ion-icon>
       </button> 
     </ion-buttons>
   </ion-toolbar>

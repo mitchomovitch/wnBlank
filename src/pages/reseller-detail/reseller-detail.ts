@@ -1,9 +1,10 @@
 import { ResellerModel } from './../../models/reseller-model';
 import { ResellerData } from './../../providers/reseller-data';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams} from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 
+declare var google;
 /*
   Generated class for the ResellerDetail page.
 
@@ -16,11 +17,13 @@ import { Geolocation } from 'ionic-native';
 })
 export class ResellerDetailPage {
   public reseller:ResellerModel;
+  public resellerList:any
 
   constructor(public nav: NavController,public navParams: NavParams, 
   public resellerData:ResellerData) {
     this.navParams = navParams;
-
+    this.resellerList=this.navParams.get('resellerList');
+    console.log('Constructor ResellerDetail Page');
     this.resellerData.getResellerDetail(this.navParams.get('resellerId')).on('value', (snapshot) => {
       this.reseller = snapshot.val();
       this.reseller.id=snapshot.key;
@@ -33,14 +36,13 @@ export class ResellerDetailPage {
   }
 
   ionViewWillLeave() {
-      this.resellerData.updateReseller(this.reseller).then( () => {
-      });
+      this.resellerData.updateReseller(this.reseller,this.resellerList);
   }
 
   locate(){
     Geolocation.getCurrentPosition().then((position) => {
-      this.reseller.gpsX=position.coords.latitude;
-      this.reseller.gpsY=position.coords.longitude;
+      this.reseller.latlng=position.coords.latitude+","+position.coords.longitude;
+      
     }, (err) => {
       console.log('Geoloaction:'+err);
     });
@@ -48,8 +50,11 @@ export class ResellerDetailPage {
 
   removeReseller(){
     console.log("delete notes");
-    this.resellerData.removeReseller(this.reseller);
+    this.resellerData.removeReseller(this.reseller,this.resellerList);
     this.nav.pop();
+  }
+  saveCloud(){
+
   }
 
 }

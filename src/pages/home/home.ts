@@ -1,9 +1,11 @@
+import { ProfileData } from './../../providers/profile-data';
 import { WineModel } from './../../models/wine-model';
 import { WineCreatePage } from './../wine-create/wine-create';
 import { WineData } from './../../providers/wine-data';
 import { WineDetailPage } from './../wine-detail/wine-detail';
 import { Component,NgZone } from '@angular/core';
 import { NavController,ActionSheetController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 
 declare var cordova;
 
@@ -12,21 +14,64 @@ declare var cordova;
   templateUrl: 'home.html'
 })
 export class HomePage {
-
+  
   public wineList: any;
   wineModel: WineModel;
 
   constructor(public nav: NavController, public actionsheetCtrl: ActionSheetController,
-  public wineData:WineData, private ngZone:NgZone) {
+  public wineData:WineData, private ngZone:NgZone, public storage: Storage,public profileData:ProfileData) {
+    
     this.nav = nav;
     this.wineData = wineData;
-    this.wineList = this.wineData.getWineList();;
+    this.wineList = this.wineData.getWineList();
+    /*var listVide:any[];
+    this.storage.set('wineListToDelete',JSON.stringify(listVide));
+    this.storage.set('wineList',JSON.stringify(listVide));*/
+    storage.get('wineListToDelete').then(list=>{
+      if(list){
+        var array:any[]=JSON.parse(list);
+        console.log('WINE LIST TO DELETE :'+list);
+        for(var i = 0, len = array.length; i < len; i++) {
+          console.log("REMOVE "+i+' '+array[i]);
+          this.wineData.removeWine(array[i],this.wineList);
+        }
+      }
+    });
+
+    storage.get('wineList').then(list=>{
+      if(list){
+        console.log("use local");
+        var array:any[]=JSON.parse(list);
+        console.log('WINE LIST :'+list);
+        
+        for(var i = array.length-1;i>=0;i--){
+          if(array[i].id!=null){
+            console.log('init update :'+array[i].id);
+            //update
+            if(array[i].photoName!=null && array[i].photoName==null){
+              this.wineData.updateWine(array[i],true,this.wineList);
+            }
+            else {
+              this.wineData.updateWine(array[i],false,this.wineList);
+            }
+            
+          }
+          else {
+            console.log('init add '+i);
+            //add
+            this.wineData.createWine(array[i],this.wineList);
+          }
+          
+        }
+      }
+    });
+    
     
   }
 
-  goToWineDetail(wineId){
+  goToWineDetail(wine){
     this.nav.push(WineDetailPage, {
-      wineId: wineId,
+      wine: wine,
       wineList: this.wineList
     });
   }

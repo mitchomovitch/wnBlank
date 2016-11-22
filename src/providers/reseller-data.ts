@@ -1,6 +1,7 @@
+import { FirebaseData } from './firebase-data';
 import { ResellerModel } from './../models/reseller-model';
 import { Platform } from 'ionic-angular';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import firebase from 'firebase';
 
 /*
@@ -10,47 +11,39 @@ import firebase from 'firebase';
   for more info on providers and Angular 2 DI.
 */
 @Injectable()
-export class ResellerData {
+export class ResellerData extends FirebaseData{
 
   public currentUser: any;
   public resellerList: any;
 
-  constructor(public platform:Platform) {
-    this.currentUser = firebase.auth().currentUser.uid;
+  constructor(public platform:Platform, ngZone:NgZone) {
+    super(platform,ngZone);
+    //this.currentUser = firebase.auth().currentUser.uid;
     this.resellerList = firebase.database().ref('resellerList');
 
   }
 
   getResellerList(): any {
-    return this.resellerList;
+    return this.getSynchronizedArray(this.resellerList);
   }
 
   getResellerDetail(resellerId): any {
     return this.resellerList.child(resellerId);
   }
 
-  createReseller(reseller : ResellerModel): any {
+  createReseller(reseller : ResellerModel, list:any) {
     let date = new Date(),time = date.getTime();
     reseller.time=time;
-    return this.resellerList.push(reseller).then( newReseller => {
-      this.resellerList.child(newReseller.key).child('id').set(newReseller.key);
-    }, error => {
-      console.log("create reseller error-> " + JSON.stringify(error));
-    });
+    list.add(reseller).key;
+  }
+
+  updateReseller(updateReseller:ResellerModel, list:any) {  
+    list.set( updateReseller.id, updateReseller );
     
   }
 
-  updateReseller(updateReseller:ResellerModel): any {  
-    return this.resellerList.child(updateReseller.id).update(updateReseller)
-    .then( reseller => {
-    }, error => {
-      console.log("update reseller error-> " + JSON.stringify(error));
-    });  
-    
-  }
-
-  removeReseller(reseller:ResellerModel){
-    this.resellerList.child(reseller.id).remove(reseller);
+  removeReseller(reseller:ResellerModel, list:any){
+    list.remove(reseller.id);
   }
 
 }

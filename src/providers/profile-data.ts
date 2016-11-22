@@ -8,12 +8,13 @@ export class ProfileData {
 
 
   constructor() {
-    this.currentUser = firebase.auth().currentUser;
+    //this.currentUser = firebase.auth().currentUser;
     this.userProfile = firebase.database().ref('/userProfile');
 
   }
 
   getUserProfile(): any {
+    this.currentUser = firebase.auth().currentUser;
     return this.userProfile.child(this.currentUser.uid);
   }
 

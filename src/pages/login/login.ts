@@ -1,3 +1,4 @@
+import { ProfileData } from './../../providers/profile-data';
 import { AuthData } from './../../providers/auth-data';
 import { HomePage } from './../home/home';
 import { NavController, LoadingController, AlertController } from 'ionic-angular';
@@ -7,6 +8,7 @@ import { SignupPage } from '../signup/signup';
 
 import { ResetPasswordPage } from '../reset-password/reset-password';
 import { EmailValidator } from '../../validators/email';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-login',
@@ -20,7 +22,8 @@ export class LoginPage {
   loading: any;
 
   constructor(public nav: NavController, public authData: AuthData, public formBuilder: FormBuilder,
-    public alertCtrl: AlertController, public loadingCtrl: LoadingController) {
+    public alertCtrl: AlertController, public loadingCtrl: LoadingController,
+    public storage: Storage,public profileData:ProfileData) {
 
     /**
      * Creates a ControlGroup that declares the fields available, their values and the validators that they are going
@@ -56,7 +59,11 @@ export class LoginPage {
       console.log(this.loginForm.value);
     } else {
       this.authData.loginUser(this.loginForm.value.email, this.loginForm.value.password).then( authData => {
-        this.nav.setRoot(HomePage);
+        this.profileData.getUserProfile().on('value', (snapshot) => {
+              this.storage.set('userProfile',JSON.stringify(snapshot.val()));
+              this.nav.setRoot(HomePage);
+        });
+        
       }, error => {
         this.loading.dismiss().then( () => {
           let alert = this.alertCtrl.create({

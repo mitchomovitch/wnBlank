@@ -1,9 +1,11 @@
+import { Storage } from '@ionic/storage';
+import { ResellerModel } from './../../models/reseller-model';
 import { ResellerMapPage } from './../reseller-map/reseller-map';
 import { ResellerListPage } from './../reseller-list/reseller-list';
 import { ResellerCreatePage } from './../reseller-create/reseller-create';
 import { WineData } from './../../providers/wine-data';
 import { Component } from '@angular/core';
-import { NavController, NavParams,ActionSheetController  } from 'ionic-angular';
+import { NavController, NavParams,ActionSheetController,Events, Platform } from 'ionic-angular';
 import { BarcodeScanner } from 'ionic-native';
 
 declare var cordova;
@@ -19,21 +21,32 @@ declare var cordova;
 })
 export class WineDetailPage {
   public wineList: any;
-  currentWine: any;
+  wine: any;
+  public modelChanged:boolean;
+  public photoChanged:boolean;
   public isDeleted: boolean;
-  constructor(public nav: NavController, public navParams: NavParams, public actionsheetCtrl: ActionSheetController, 
-  public wineData: WineData) {
+  public lastModif:Date;
+  constructor(public platform:Platform,public nav: NavController, public navParams: NavParams, public actionsheetCtrl: ActionSheetController, 
+  public wineData: WineData,public events: Events,public storage:Storage) {
+
+    console.log('Constructor WineDetailPage Page');
     this.navParams = navParams;
     this.wineList=this.navParams.get('wineList');
+    this.wine=this.navParams.get('wine');
+    this.modelChanged=false;
+    this.photoChanged=false;
+    this.isDeleted=false;
+    this.lastModif= new Date(this.wine.time);
 
-    this.wineData.getWineDetail(this.navParams.get('wineId')).on('value', (snapshot) => {
-      this.currentWine = snapshot.val();
-      this.currentWine.id=snapshot.key;
-      this.isDeleted=false;
-      if(this.currentWine.photoName!=null){
-        console.log("evaluate photoPath");
-          this.currentWine.photoPath=cordova.file.dataDirectory+this.currentWine.photoName;
-      } 
+    this.events.subscribe('reseller:selected', (data) => {
+      // data is an array of parameters, so grab our first and only arg
+      let reseller:ResellerModel;
+      reseller=data[0];
+      if(this.wine){
+        //this.wine.vendeur=reseller.nom;
+        //this.elementChanged();
+      }
+      //console.log('Event data', JSON.stringify(data));
     });
   }
 
@@ -43,16 +56,17 @@ export class WineDetailPage {
 
   ionViewWillLeave() {
     console.log('Not deleted ?'+(!this.isDeleted));
-    if(!this.isDeleted){
+    if(this.modelChanged&&!this.isDeleted){
       console.log('update wine detail');
-      this.wineData.updateWine(this.currentWine,this.wineList);
+      this.wineData.updateWine(this.wine,this.photoChanged,this.wineList);
     }
       
   }
 
   scan(){
     BarcodeScanner.scan().then((barcodeData) => {
-      this.currentWine.codebarre=barcodeData.text;
+      this.elementChanged();
+      this.wine.codebarre=barcodeData.text;
     // Success! Barcode data is here
     }, (err) => {
         console.log("ERROR -> " + JSON.stringify(err));
@@ -77,6 +91,13 @@ export class WineDetailPage {
           handler: () => {
             this.openPhotoLibrary();
           }
+        },
+        {
+          text: 'Scanner un code barre',
+          icon: 'barcode',
+          handler: () => {
+            this.scan();
+          }
         }
       ]
     });
@@ -85,25 +106,31 @@ export class WineDetailPage {
 
   takePicture(){
     this.wineData.takePicture(1).then(success=>{
+      this.elementChanged();
+      this.photoChanged=true;
       let name = success.nativeURL.replace(/^.*[\\\/]/, '');
-      this.currentWine.photoName=name;
-      this.currentWine.photoPath=success.nativeURL;
+      this.wine.photoName=name;
+      this.wine.photoPath=success.nativeURL;
+      
     });
   }
 
 
   openPhotoLibrary(){
     this.wineData.takePicture(0).then(success=>{
+      this.elementChanged();
+      this.photoChanged=true;
       let name = success.nativeURL.replace(/^.*[\\\/]/, '');
-      this.currentWine.photoName=name;
-      this.currentWine.photoPath=success.nativeURL;
+      this.wine.photoName=name;
+      this.wine.photoPath=success.nativeURL;
     });
   }
 
   removeWine(){
     console.log("delete notes");
+    this.elementChanged();
     
-    this.wineData.removeWine(this.currentWine,this.wineList);
+    this.wineData.removeWine(this.wine,this.wineList);
     this.isDeleted=true;
     console.log("delete notes finish");
     this.nav.pop();
@@ -119,6 +146,46 @@ export class WineDetailPage {
 
   searchResellerByMap(){
     this.nav.push(ResellerMapPage);
+  }
+
+  saveCloud(){
+
+  }
+
+  openMenuDetail()
+  {
+    let actionSheet = this.actionsheetCtrl.create({
+      cssClass: 'action-sheets-basic-page',
+      buttons: [
+        {
+          text: 'Vendeurs',
+          icon: 'basket',
+          handler: () => {
+            this.searchResellerByName();
+          }
+        },
+        {
+          text: 'Supprimer',
+          icon: 'trash',
+          handler: () => {
+            this.removeWine();
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+    
+  }
+
+  elementChanged(){
+    //console.log('element Changed !');
+    this.modelChanged=true;
+  }
+
+  setColor(color:string){
+    console.log('color :'+color);
+    this.wine.color=color;
+    this.elementChanged();
   }
 
 

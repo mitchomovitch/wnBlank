@@ -1,8 +1,8 @@
+import { PriceCreatePage } from './../../../.tmp/pages/price-create/price-create';
+import { PriceModel } from './../../models/price-model';
+import { PriceData } from './../../providers/price-data';
+import { ValueListPage } from './../value-list/value-list';
 import { Storage } from '@ionic/storage';
-import { ResellerModel } from './../../models/reseller-model';
-import { ResellerMapPage } from './../reseller-map/reseller-map';
-import { ResellerListPage } from './../reseller-list/reseller-list';
-import { ResellerCreatePage } from './../reseller-create/reseller-create';
 import { WineData } from './../../providers/wine-data';
 import { Component } from '@angular/core';
 import { NavController, NavParams,ActionSheetController,Events, Platform } from 'ionic-angular';
@@ -22,45 +22,46 @@ declare var cordova;
 export class WineDetailPage {
   public wineList: any;
   wine: any;
-  public modelChanged:boolean;
   public photoChanged:boolean;
   public isDeleted: boolean;
   public lastModif:Date;
-  constructor(public platform:Platform,public nav: NavController, public navParams: NavParams, public actionsheetCtrl: ActionSheetController, 
+  constructor(public platform:Platform,public nav: NavController, public navParams: NavParams, public actionsheetCtrl: ActionSheetController, public priceData : PriceData,
   public wineData: WineData,public events: Events,public storage:Storage) {
 
     console.log('Constructor WineDetailPage Page');
     this.navParams = navParams;
     this.wineList=this.navParams.get('wineList');
     this.wine=this.navParams.get('wine');
-    this.modelChanged=false;
     this.photoChanged=false;
     this.isDeleted=false;
     this.lastModif= new Date(this.wine.time);
 
-    this.events.subscribe('reseller:selected', (data) => {
-      // data is an array of parameters, so grab our first and only arg
-      let reseller:ResellerModel;
-      reseller=data[0];
-      if(this.wine){
-        //this.wine.vendeur=reseller.nom;
-        //this.elementChanged();
-      }
+    this.events.subscribe('region:selected', (data) => {
       //console.log('Event data', JSON.stringify(data));
+      if(this.wine){
+        //console.log('Event data', data.region);
+        this.wine.region=data[0].region;
+        this.wine.subdivision=data[0].subdivision;
+        this.wine.appellation=data[0].appellation;
+        
+        this.elementChanged();
+      }
+      
     });
+
   }
 
   ionViewDidLoad() {
-    console.log('Hello WineDetail Page');
+    console.log('Hello WineDetail Page');  
   }
+
 
   ionViewWillLeave() {
     console.log('Not deleted ?'+(!this.isDeleted));
-    if(this.modelChanged&&!this.isDeleted){
+    if(this.wine.isChanged&&!this.isDeleted){
       console.log('update wine detail');
-      this.wineData.updateWine(this.wine,this.photoChanged,this.wineList);
+      this.wineData.saveWine(this.wine,this.wineList);
     }
-      
   }
 
   scan(){
@@ -107,7 +108,7 @@ export class WineDetailPage {
   takePicture(){
     this.wineData.takePicture(1).then(success=>{
       this.elementChanged();
-      this.photoChanged=true;
+      this.wine.isPhotoChanged=true;
       let name = success.nativeURL.replace(/^.*[\\\/]/, '');
       this.wine.photoName=name;
       this.wine.photoPath=success.nativeURL;
@@ -119,7 +120,7 @@ export class WineDetailPage {
   openPhotoLibrary(){
     this.wineData.takePicture(0).then(success=>{
       this.elementChanged();
-      this.photoChanged=true;
+      this.wine.isPhotoChanged=true;
       let name = success.nativeURL.replace(/^.*[\\\/]/, '');
       this.wine.photoName=name;
       this.wine.photoPath=success.nativeURL;
@@ -136,18 +137,6 @@ export class WineDetailPage {
     this.nav.pop();
   }
 
-  addReseller(){
-    this.nav.push(ResellerCreatePage);
-  }
-
-  searchResellerByName(){
-    this.nav.push(ResellerListPage);
-  }
-
-  searchResellerByMap(){
-    this.nav.push(ResellerMapPage);
-  }
-
   saveCloud(){
 
   }
@@ -157,13 +146,6 @@ export class WineDetailPage {
     let actionSheet = this.actionsheetCtrl.create({
       cssClass: 'action-sheets-basic-page',
       buttons: [
-        {
-          text: 'Vendeurs',
-          icon: 'basket',
-          handler: () => {
-            this.searchResellerByName();
-          }
-        },
         {
           text: 'Supprimer',
           icon: 'trash',
@@ -178,14 +160,30 @@ export class WineDetailPage {
   }
 
   elementChanged(){
-    //console.log('element Changed !');
-    this.modelChanged=true;
+    this.wine.isChanged=true;
   }
 
   setColor(color:string){
     console.log('color :'+color);
     this.wine.color=color;
     this.elementChanged();
+  }
+
+  openValueList(listName:string){
+    this.nav.push(ValueListPage, {
+        listName: listName
+    });
+  }
+
+  openPrice(){
+    this.nav.push(PriceCreatePage, {
+        wine: this.wine,
+        price : new PriceModel
+    }); 
+  }
+
+  backButtonClick(){
+    console.log("wine detail back click");
   }
 
 

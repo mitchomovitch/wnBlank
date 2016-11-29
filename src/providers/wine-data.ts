@@ -1,6 +1,8 @@
+import { UtilData } from './util-data';
+import { PriceData } from './price-data';
 import { ClassementProfile } from './classement-profile';
 import { FirebaseData } from './firebase-data';
-import { Platform } from 'ionic-angular';
+import { Platform, Events } from 'ionic-angular';
 import { WineModel } from './../models/wine-model';
 import { Injectable, NgZone } from '@angular/core';
 import firebase from 'firebase';
@@ -20,16 +22,31 @@ export class WineData extends FirebaseData{
   
 
   constructor(public platform:Platform, public ngZone:NgZone,public storage: Storage, 
-  public classementProfile:ClassementProfile) {
-    super(platform,ngZone);
+  public classementProfile:ClassementProfile, public priceData : PriceData, public util : UtilData,
+  public events:Events) {
+    super(platform,ngZone,storage);
     //this.currentUser = firebase.auth().currentUser.uid;
+    this.storage.get('userProfile').then(profile=>{
+      console.log('userProfile',profile)
+      this.userProfile=JSON.parse(profile);
+    }); 
+    this.events.subscribe('userProfile:updated', (data) => {
+      console.log('userProfile events',JSON.stringify(data[0]));
+      this.userProfile=data[0];    
+    });
+
     this.wineList = firebase.database().ref('wineList');
     this.winePictureRef = firebase.storage().ref('/WinePhoto/');
     console.log('Hello WineData provider');
-    storage.get('userProfile').then(profile=>{
-      this.userProfile=JSON.parse(profile);
-    });    
-    storage.get('wineListToDelete').then(listDelete=>{
+    this.initLocalStorage();
+       
+
+  }
+
+  initLocalStorage(){
+    
+
+    this.storage.get('wineListToDelete').then(listDelete=>{
       if(listDelete){
         this.wineListToDelete=JSON.parse(listDelete);
       }
@@ -37,15 +54,20 @@ export class WineData extends FirebaseData{
         this.wineListToDelete=[];
       }
     }); 
-    storage.get('geocoderClassementList').then(geocoderList=>{
+    this.storage.get('geocoderClassementList').then(geocoderList=>{
+      console.log('geocoderList storage enter',geocoderList);
       if(geocoderList){
+        console.log('geocoderList',geocoderList);
         this.geocoderClassementList=JSON.parse(geocoderList);
+        this.updateClassement();
       }
-      else {
+      else {   
         this.geocoderClassementList=[];
+        console.log('geocoderList init');
       }
-    });        
+    });   
 
+      
   }
 
   getWineList(): any {
@@ -56,51 +78,36 @@ export class WineData extends FirebaseData{
     return this.wineList.child(wineId);
   }
 
-  createWine(wine : WineModel, list:any) {
-    if(wine.time!=null){
-      list.add(wine).then(data=>{
-          wine.id=data.key;
-          if (wine.photoPath != null) {
-              this.savePhoto(wine,list);         
-          }
-      });
-    }
-    else {
+  saveWine(wine:WineModel, list:any) {  
+    if(wine.id==null){
       let date = new Date(),time = date.getTime();
+      wine.id=this.util.uuid.generateTimeId();
       wine.time=time;
       wine.userId=this.userProfile.id;
       wine.userPseudo=this.userProfile.pseudo; 
-      
+    }
 
+    if(wine.latlng==null){
       Geolocation.getCurrentPosition().then((position) => {
           wine.latlng=position.coords.latitude+","+position.coords.longitude;
           wine.nbPointToUpdate=10;
-          console.log('addwine to list');
-          list.add(wine).then(data=>{
-              wine.id=data.key;
-              if (wine.photoPath != null) {
-                  this.savePhoto(wine,list);         
-              }
-              
-          });
+          list.set( wine.id, wine );
           this.storage.set('wineList',JSON.stringify(list));
-          console.log(JSON.stringify(list));
+          if (wine.photoPath != null && wine.isPhotoChanged) {
+              this.savePhoto(wine,list);         
+          } 
           this.addItemToGeocoderClassementList(wine.latlng,10,this.userProfile);
           this.updateClassement();
           
       });
-      
     }
-    
-    
-  }
-
-  updateWine(updateWine:WineModel, photoChanged:boolean,list:any) {  
-    list.set( updateWine.id, updateWine );
-    this.storage.set('wineList',JSON.stringify(list));
-    if (updateWine.photoPath != null && photoChanged) {
-        this.savePhoto(updateWine,list);         
-    } 
+    else {
+      list.set( wine.id, wine );
+      this.storage.set('wineList',JSON.stringify(list));
+      if (wine.photoPath != null && wine.isPhotoChanged) {
+          this.savePhoto(wine,list);         
+      } 
+    }
     
   }
 
@@ -122,8 +129,9 @@ export class WineData extends FirebaseData{
         this.wineListToDelete.splice(i, 1);
         this.storage.set('wineListToDelete',JSON.stringify(this.wineListToDelete));
       }
+      this.storage.set('wineList',JSON.stringify(list));
     });
-    this.storage.set('wineList',JSON.stringify(list));
+    
   }
 
   savePhoto(wine:WineModel, list:any){
@@ -146,7 +154,9 @@ export class WineData extends FirebaseData{
       .putString(base64, 'base64', {contentType: 'image/png'})
       .then((savedPicture) => {
         wine.photoUrl=savedPicture.downloadURL;
+        wine.isPhotoChanged=false;
         list.set( wine.id, wine );
+        this.storage.set('wineList',JSON.stringify(list));
         //this.wineList.child(wine.id).child('photoUrl').set(savedPicture.downloadURL);
       }, (err) => {
         console.log('err putString : '+err);
@@ -279,6 +289,7 @@ export class WineData extends FirebaseData{
   }
 
   updateClassement():void{
+    console.log('init update classement');
     if(this.geocoderClassementList!=null && this.geocoderClassementList.length>0){
       console.log('update classement');
       this.classementProfile.updateClassement(this.geocoderClassementList[0],this.geocoderClassementList);

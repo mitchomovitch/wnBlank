@@ -24,15 +24,14 @@ export class HomePage {
     this.nav = nav;
     this.wineData = wineData;
     this.wineList = this.wineData.getWineList();
-    /*var listVide:any[];
-    this.storage.set('wineListToDelete',JSON.stringify(listVide));
-    this.storage.set('wineList',JSON.stringify(listVide));*/
+    
+
     storage.get('wineListToDelete').then(list=>{
       if(list){
         var array:any[]=JSON.parse(list);
-        console.log('WINE LIST TO DELETE :'+list);
+        //console.log('WINE LIST TO DELETE :'+list);
         for(var i = 0, len = array.length; i < len; i++) {
-          console.log("REMOVE "+i+' '+array[i]);
+          //console.log("REMOVE "+i+' '+array[i]);
           this.wineData.removeWine(array[i],this.wineList);
         }
       }
@@ -42,26 +41,12 @@ export class HomePage {
       if(list){
         console.log("use local");
         var array:any[]=JSON.parse(list);
-        console.log('WINE LIST :'+list);
+        //console.log('WINE LIST :'+list);
         
         for(var i = array.length-1;i>=0;i--){
           if(array[i].id!=null){
-            console.log('init update :'+array[i].id);
-            //update
-            if(array[i].photoName!=null && array[i].photoName==null){
-              this.wineData.updateWine(array[i],true,this.wineList);
-            }
-            else {
-              this.wineData.updateWine(array[i],false,this.wineList);
-            }
-            
+            this.wineData.saveWine(array[i],this.wineList);
           }
-          else {
-            console.log('init add '+i);
-            //add
-            this.wineData.createWine(array[i],this.wineList);
-          }
-          
         }
       }
     });
@@ -115,9 +100,10 @@ export class HomePage {
     this.wineData.takePicture(1).then(success=>{
       let wine = new WineModel();
       let name = success.nativeURL.replace(/^.*[\\\/]/, '');
+      wine.isPhotoChanged=true;
       wine.photoName=name;
       wine.photoPath=success.nativeURL;
-      this.wineData.createWine(wine,this.wineList)
+      this.wineData.saveWine(wine,this.wineList)
     });    
   }
 
@@ -125,9 +111,10 @@ export class HomePage {
     this.wineData.takePicture(0).then(success=>{
       let wine = new WineModel();
       let name = success.nativeURL.replace(/^.*[\\\/]/, '');
+      wine.isPhotoChanged=true;
       wine.photoName=name;
       wine.photoPath=success.nativeURL;
-      this.wineData.createWine(wine,this.wineList)
+      this.wineData.saveWine(wine,this.wineList)
     }); 
   }
 

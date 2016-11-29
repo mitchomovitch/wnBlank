@@ -1,7 +1,7 @@
 import { ProfileData } from './../../providers/profile-data';
 import { AuthData } from './../../providers/auth-data';
 import { HomePage } from './../home/home';
-import { NavController, LoadingController, AlertController } from 'ionic-angular';
+import { NavController, LoadingController, AlertController, Events } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SignupPage } from '../signup/signup';
@@ -23,7 +23,7 @@ export class LoginPage {
 
   constructor(public nav: NavController, public authData: AuthData, public formBuilder: FormBuilder,
     public alertCtrl: AlertController, public loadingCtrl: LoadingController,
-    public storage: Storage,public profileData:ProfileData) {
+    public storage: Storage,public profileData:ProfileData, public events:Events) {
 
     /**
      * Creates a ControlGroup that declares the fields available, their values and the validators that they are going
@@ -61,6 +61,7 @@ export class LoginPage {
       this.authData.loginUser(this.loginForm.value.email, this.loginForm.value.password).then( authData => {
         this.profileData.getUserProfile().on('value', (snapshot) => {
               this.storage.set('userProfile',JSON.stringify(snapshot.val()));
+              this.events.publish('userProfile:updated', snapshot.val());
               this.nav.setRoot(HomePage);
         });
         

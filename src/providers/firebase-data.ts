@@ -1,3 +1,4 @@
+import { Storage } from '@ionic/storage';
 import { Platform } from 'ionic-angular';
 import { Injectable, NgZone } from '@angular/core';
 declare var cordova;
@@ -10,7 +11,7 @@ declare var cordova;
 @Injectable()
 export class FirebaseData {
 
-  constructor(public platform:Platform, public ngZone:NgZone) {
+  constructor(public platform:Platform, public ngZone:NgZone, public storage : Storage) {
     console.log('Hello FirebaseData Provider');
   }
 
@@ -27,23 +28,19 @@ syncChanges(list, ref) {
 
   ref.on('child_added', (snap, prevChild) => {
     this.ngZone.run(()=>{
-      console.log("syncChanges child_added");
       var data = snap.val();
       data.id = snap.key; // assumes data is always an object
-      //var pos = this.positionAfter(list, prevChild);
-      //list.splice(pos, 0, data);
-      //Ajout du nouvel element a la position 1
-      list.splice(0, 0, data);
+      var pos = this.positionAfter(list, prevChild);
+      list.splice(pos, 0, data);   
       //console.log("child_added list :"+JSON.stringify(list));
     });
   });
 
   ref.on('child_removed', (snap) => {
-    this.ngZone.run(()=>{
-      //console.log("syncChanges child_removed");
+    this.ngZone.run(()=>{    
       var i = this.positionFor(list, snap.key);
       if( i > -1 ) {
-        list.splice(i, 1);
+        list.splice(i, 1);             
       }
       //console.log("child_removed list :"+JSON.stringify(list));
     });

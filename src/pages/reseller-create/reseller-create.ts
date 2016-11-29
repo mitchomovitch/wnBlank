@@ -31,12 +31,14 @@ export class ResellerCreatePage {
   }
 
   ionViewWillLeave() {
-      this.resellerData.createReseller(this.reseller, this.resellerList);
+    if(this.reseller.isChanged)
+      this.resellerData.saveReseller(this.reseller);
   }
 
   locate(){
     Geolocation.getCurrentPosition().then((position) => {
       this.reseller.latlng=position.coords.latitude+","+position.coords.longitude;
+      this.elementChanged();
     }, (err) => {
       console.log('Geoloaction:'+err);
     });
@@ -45,6 +47,10 @@ export class ResellerCreatePage {
 
   saveCloud(){
 
+  }
+
+  elementChanged(){
+    this.reseller.isChanged=true;
   }
 
 }

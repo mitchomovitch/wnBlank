@@ -17,18 +17,14 @@ declare var google;
 })
 export class ResellerDetailPage {
   public reseller:ResellerModel;
-  public resellerList:any
+  public resellerList:any;
+  public isDeleted: boolean;
 
   constructor(public nav: NavController,public navParams: NavParams, 
   public resellerData:ResellerData) {
     this.navParams = navParams;
-    this.resellerList=this.navParams.get('resellerList');
-    console.log('Constructor ResellerDetail Page');
-    this.resellerData.getResellerDetail(this.navParams.get('resellerId')).on('value', (snapshot) => {
-      this.reseller = snapshot.val();
-      this.reseller.id=snapshot.key;
-      
-    });
+    this.reseller=this.navParams.get('reseller');
+    this.isDeleted=false;
   }
 
   ionViewDidLoad() {
@@ -36,12 +32,15 @@ export class ResellerDetailPage {
   }
 
   ionViewWillLeave() {
-      this.resellerData.updateReseller(this.reseller,this.resellerList);
+    if(this.reseller.isChanged&&!this.isDeleted){
+      this.resellerData.saveReseller(this.reseller);
+    }
   }
 
   locate(){
     Geolocation.getCurrentPosition().then((position) => {
       this.reseller.latlng=position.coords.latitude+","+position.coords.longitude;
+      this.elementChanged();
       
     }, (err) => {
       console.log('Geoloaction:'+err);
@@ -50,11 +49,17 @@ export class ResellerDetailPage {
 
   removeReseller(){
     console.log("delete notes");
-    this.resellerData.removeReseller(this.reseller,this.resellerList);
+    this.resellerData.removeReseller(this.reseller);
+    this.isDeleted=true;
     this.nav.pop();
   }
+  
   saveCloud(){
 
+  }
+
+  elementChanged(){
+    this.reseller.isChanged=true;
   }
 
 }

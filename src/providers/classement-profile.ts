@@ -23,7 +23,7 @@ export class ClassementProfile extends FirebaseData{
 
   constructor(public platform:Platform, public ngZone:NgZone, public storage:Storage) {
     
-    super(platform,ngZone);
+    super(platform,ngZone,storage);
     console.log('Hello ClassementProfile Provider');
     //this.currentUser = firebase.auth().currentUser.uid;
 

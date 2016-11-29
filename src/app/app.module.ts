@@ -1,3 +1,8 @@
+import { UtilData } from './../providers/util-data';
+import { PriceData } from './../providers/price-data';
+import { PriceCreatePage } from './../pages/price-create/price-create';
+import { ValueListPage } from './../pages/value-list/value-list';
+import { ListData } from './../providers/list-data';
 import { ClassementProfile } from './../providers/classement-profile';
 import { ProfileData } from './../providers/profile-data';
 import { ResellerDetailPage } from './../pages/reseller-detail/reseller-detail';
@@ -33,7 +38,9 @@ import { Storage } from '@ionic/storage';
     ResellerCreatePage,
     ResellerDetailPage,
     ResellerListPage,
-    ResellerMapPage
+    ResellerMapPage,
+    ValueListPage,
+    PriceCreatePage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -51,8 +58,11 @@ import { Storage } from '@ionic/storage';
     ResellerCreatePage,
     ResellerDetailPage,
     ResellerListPage,
-    ResellerMapPage
+    ResellerMapPage,
+    ValueListPage,
+    PriceCreatePage
   ],
-  providers: [Storage,AuthData,ProfileData,WineData,ResellerData,ConnectivityService,ClassementProfile]
+  providers: [Storage,AuthData,ProfileData,WineData,ResellerData,ConnectivityService,ClassementProfile,
+  ListData,PriceData,UtilData]
 })
 export class AppModule {}

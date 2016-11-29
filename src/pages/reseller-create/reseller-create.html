@@ -15,32 +15,32 @@
 
   <ion-item  no-lines>
     <ion-icon  item-left name="basket"></ion-icon>
-    <ion-input placeholder="Vendeur" [(ngModel)]="reseller.nom" type="text" ></ion-input>
+    <ion-input placeholder="Vendeur" [(ngModel)]="reseller.nom" type="text" (change)="elementChanged()"></ion-input>
   </ion-item>
 
   <ion-item  no-lines>
     <ion-icon  item-left name="call"></ion-icon>
-    <ion-input placeholder="Téléphone" [(ngModel)]="reseller.tel" type="number" ></ion-input>
+    <ion-input placeholder="Téléphone" [(ngModel)]="reseller.tel" type="number" (change)="elementChanged()"></ion-input>
   </ion-item>
 
   <ion-item  no-lines>
     <ion-icon  item-left name="phone-portrait"></ion-icon>
-    <ion-input placeholder="Portable" [(ngModel)]="reseller.mobile" type="number" ></ion-input>
+    <ion-input placeholder="Portable" [(ngModel)]="reseller.mobile" type="number" (change)="elementChanged()"></ion-input>
   </ion-item>
 
   <ion-item  no-lines>
     <ion-icon  item-left name="clock"></ion-icon>
-    <ion-textarea placeholder="Horaire" rows="2" [(ngModel)]="reseller.horaire" type="text" ></ion-textarea>
+    <ion-textarea placeholder="Horaire" rows="2" [(ngModel)]="reseller.horaire" type="text" (change)="elementChanged()"></ion-textarea>
   </ion-item>
 
   <ion-item  no-lines>
     <ion-icon  item-left name="home"></ion-icon>
-    <ion-textarea placeholder="Adresse" rows="3" [(ngModel)]="reseller.adresse" type="text" ></ion-textarea>
+    <ion-textarea placeholder="Adresse" rows="3" [(ngModel)]="reseller.adresse" type="text" (change)="elementChanged()"></ion-textarea>
   </ion-item>
 
   <ion-item  no-lines>
     <ion-icon  item-left name="locate"></ion-icon>
-    <ion-input placeholder="Gps" [(ngModel)]="reseller.latlng" type="string" ></ion-input>
+    <ion-input placeholder="Gps" [(ngModel)]="reseller.latlng" type="string" (change)="elementChanged()"></ion-input>
   </ion-item>
 
 </ion-content>

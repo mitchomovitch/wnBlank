@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title> Vendeurs</ion-title>
+    <ion-searchbar placeholder="Rechercher un vendeur" (input)="getItems($event)"></ion-searchbar>
   </ion-navbar>
 
 </ion-header>
@@ -15,7 +15,7 @@
 <ion-content no-lines>
 
   <ion-list>   
-    <ion-item-sliding *ngFor="let reseller of resellerList">
+    <ion-item-sliding *ngFor="let reseller of searchResellerList">
       <ion-item (click)="selectReseller(reseller)">
 
             <p><b>{{reseller.nom}}</b></p>
@@ -23,7 +23,7 @@
       
       </ion-item> 
       <ion-item-options>
-        <button ion-button icon-only (click)="goToResellerDetail(reseller.id)">
+        <button ion-button icon-only (click)="goToResellerDetail(reseller)">
             <ion-icon name="more"></ion-icon>Détail
         </button>
       </ion-item-options>

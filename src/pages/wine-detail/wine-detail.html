@@ -85,22 +85,22 @@
     <ion-icon  item-left name="contact"></ion-icon>
     <ion-input placeholder="Producteur" [(ngModel)]="wine.producteur" type="text" (change)="elementChanged()"></ion-input>
   </ion-item>
-   <ion-item no-lines>
-    <ion-icon  item-left name="locate"></ion-icon>
-    <ion-input placeholder="Appellation" [(ngModel)]="wine.appellation" type="text" (change)="elementChanged()"></ion-input>
-  </ion-item>
-  <ion-item no-lines>
-    <ion-input placeholder="Région" [(ngModel)]="wine.region" type="text" (change)="elementChanged()"></ion-input>
-  </ion-item>
-   <ion-item no-lines>
-    <ion-input placeholder="Subdivision" [(ngModel)]="wine.subdivision" type="text" (change)="elementChanged()"></ion-input>
-  </ion-item>
-  
 
-  <ion-item no-lines>
-    <ion-icon  item-left name="usd"></ion-icon>
-    <ion-label *ngIf="wine.prixLast"> Dernier prix ajouté : {{wine.prixLast}}</ion-label>
-    <ion-label *ngIf="wine.prixMin"> Prix le plus bas : {{wine.prixMin}}</ion-label>
+   <ion-item no-lines (click)="openValueList('region')">
+    <ion-icon  item-left name="pin"></ion-icon>
+    <ion-label *ngIf="!wine.region"> Appellation, région ...</ion-label>
+    <ion-label *ngIf="wine.region"> {{wine.appellation}} {{wine.region}} {{wine.subdivision}}</ion-label>
+  </ion-item>
+
+  <ion-item no-lines (click)="openPrice()">
+    <ion-icon  item-left name="cash"></ion-icon>
+    <ion-label *ngIf="!wine.lastPrice"> Prix</ion-label>
+    <ion-label *ngIf="wine.lastPrice"> Dernier : {{wine.lastPrice.prix}} CFP {{wine.lastPrice.vendeurName}}</ion-label>
+  </ion-item> 
+   
+  <ion-item no-lines (click)="openPrice()" *ngIf="wine.minPrice">
+    <ion-icon  item-left name="arrow-down"></ion-icon>
+    <ion-label> Meilleur : {{wine.minPrice.prix}} CFP {{wine.minPrice.vendeurName}}</ion-label>
   </ion-item>
 
   <ion-item no-lines>

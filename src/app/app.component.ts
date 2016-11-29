@@ -43,6 +43,13 @@ export class MyApp {
       
     });
 
+    /*var listVide:any[];
+    this.storage.set('wineListToDelete',JSON.stringify(listVide));
+    this.storage.set('wineList',JSON.stringify(listVide));
+
+    this.storage.set('priceList',JSON.stringify(listVide));
+    this.storage.set('priceListToDelete',JSON.stringify(listVide));*/
+
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.

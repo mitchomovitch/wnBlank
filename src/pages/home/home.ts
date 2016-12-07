@@ -1,3 +1,4 @@
+import { SearchMenuPage } from './../search-menu-page/search-menu-page';
 import { ProfileData } from './../../providers/profile-data';
 import { WineModel } from './../../models/wine-model';
 import { WineCreatePage } from './../wine-create/wine-create';
@@ -70,6 +71,9 @@ export class HomePage {
 
   searchWine(){
     console.log('searchWine');
+    this.nav.push(SearchMenuPage, {
+      wineList: this.wineList
+    });
   }
 
   openMenuPhoto() {

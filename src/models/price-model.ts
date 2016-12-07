@@ -7,7 +7,7 @@ export class PriceModel {
     public isToDelete:boolean;
     public isChanged:boolean;
 
-    public prix: string;
+    public prix: number;
     public vendeurId: string;
     public vendeurName: string; 
     

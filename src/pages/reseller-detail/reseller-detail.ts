@@ -30,7 +30,7 @@ export class ResellerDetailPage {
   ionViewDidLoad() {
     console.log('Hello ResellerDetail Page');
   }
-
+   
   ionViewWillLeave() {
     if(this.reseller.isChanged&&!this.isDeleted){
       this.resellerData.saveReseller(this.reseller);

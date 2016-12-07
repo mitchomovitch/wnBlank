@@ -44,6 +44,8 @@ export class MyApp {
     });
 
     /*var listVide:any[];
+    this.storage.set('vendorWineList',JSON.stringify(listVide));
+    
     this.storage.set('wineListToDelete',JSON.stringify(listVide));
     this.storage.set('wineList',JSON.stringify(listVide));
 

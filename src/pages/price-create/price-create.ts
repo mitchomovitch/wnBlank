@@ -40,41 +40,51 @@ export class PriceCreatePage {
 
   processUpdate(){
     if(this.price.isChanged && this.price.prix && this.price.vendeurId){
-      console.log('new price');
 
       this.price.isChanged=false;
       this.price.wineId=this.wine.id;
       //last price
-      console.log('last price 1 ', this.price.id);
       this.price=this.updateVendorPrice(this.price);
-      console.log('last price 2', this.price.id);
       this.priceData.savePrice(this.price);
       this.priceList = this.priceData.getWinePriceList(this.wine);
       this.wine.lastPrice=this.price;
       //best Price
       this.wine.minPrice=this.getBestPrice();
-      console.log('best price', this.wine.minPrice.prix);
       this.wine.isChanged=true;
+      
+
     }
 
     if(this.priceList.length>0){
         if(this.wine.lastPrice && !this.isPriceExist(this.wine.lastPrice)){
-          console.log('update last Price');
           this.wine.lastPrice=this.getLastPrice();
           this.wine.isChanged=true;
         }
 
         if(this.wine.minPrice &&!this.isPriceExist(this.wine.minPrice)){
-          console.log('update best Price');
           this.wine.minPrice=this.getBestPrice();
           this.wine.isChanged=true;
         }
     }
     else {
-        console.log('reset wine Price');
         this.wine.lastPrice=null;   
         this.wine.minPrice=null;
+        this.wine.gammePrix=null;
     }
+
+    if(this.wine.lastPrice){
+        // Gamme de prix
+        if(this.wine.lastPrice.prix<1000){
+          this.wine.gammePrix='<1000';
+        }
+        else if(this.wine.lastPrice.prix<2000){
+          this.wine.gammePrix='1000-2000';
+        } 
+        else {
+          this.wine.gammePrix='2000';
+        }
+    }
+    
   }
 
   getLastPrice():PriceModel{
@@ -113,7 +123,7 @@ export class PriceCreatePage {
   }
 
   searchResellerByName(){
-    this.nav.push(ResellerListPage, {
+    this.nav.push(ResellerListPage, {  
         price: this.price
     }); 
   }

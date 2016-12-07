@@ -32,7 +32,7 @@ export class ResellerCreatePage {
 
   ionViewWillLeave() {
     if(this.reseller.isChanged)
-      this.resellerData.saveReseller(this.reseller);
+      this.resellerData.saveReseller(this.reseller);  
   }
 
   locate(){
@@ -45,7 +45,7 @@ export class ResellerCreatePage {
 
   }
 
-  saveCloud(){
+  saveCloud(){  
 
   }
 

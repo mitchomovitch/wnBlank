@@ -14,7 +14,8 @@ declare var cordova:any;
 @Injectable()
 export class WineData extends FirebaseData{
   public currentUser: any;
-  public wineList: any;
+  public wineListRef: any;
+  public syncWineList: any;
   public winePictureRef: any;
   public userProfile:any;
   public wineListToDelete:any[];
@@ -35,7 +36,8 @@ export class WineData extends FirebaseData{
       this.userProfile=data[0];    
     });
 
-    this.wineList = firebase.database().ref('wineList');
+    this.wineListRef = firebase.database().ref('wineList');
+    this.syncWineList=this.getSynchronizedArray(this.wineListRef);
     this.winePictureRef = firebase.storage().ref('/WinePhoto/');
     console.log('Hello WineData provider');
     this.initLocalStorage();
@@ -45,7 +47,6 @@ export class WineData extends FirebaseData{
 
   initLocalStorage(){
     
-
     this.storage.get('wineListToDelete').then(listDelete=>{
       if(listDelete){
         this.wineListToDelete=JSON.parse(listDelete);
@@ -71,11 +72,11 @@ export class WineData extends FirebaseData{
   }
 
   getWineList(): any {
-    return this.getSynchronizedArray(this.wineList);
+    return this.syncWineList;
   }
 
   getWineDetail(wineId): any {
-    return this.wineList.child(wineId);
+    return this.wineListRef.child(wineId);
   }
 
   saveWine(wine:WineModel, list:any) {  

@@ -1,0 +1,148 @@
+<!--
+  Generated template for the SearchMenuPage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-searchbar [placeholder]="libSearch" (input)="getItems($event)"></ion-searchbar>
+  </ion-navbar>
+  
+</ion-header>
+
+<ion-content>
+
+  <ion-card *ngFor="let wine of items" (tap)="goToWineDetail(wine)">
+    <img [src]="wine.photoPath" *ngIf="wine.photoPath">
+    
+    <ion-card-content *ngIf="wine.nom">
+      <ion-item no-lines >
+        <b>{{wine.nom}} {{wine.millesime}}</b> 
+        <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score==0"></ion-icon>
+        <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==1"></ion-icon>
+        <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=2"></ion-icon>
+        <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==3"></ion-icon>
+        <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=4"></ion-icon>
+        <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==5"></ion-icon>
+        <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=6"></ion-icon>
+        <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==7"></ion-icon>
+        <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=8"></ion-icon>
+        <ion-icon small item-right color="primary" name="star-half" *ngIf="wine.score==9"></ion-icon>
+        <ion-icon small item-right color="primary" name="star" *ngIf="wine.score>=10"></ion-icon>
+        <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<3"></ion-icon>
+        <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<5"></ion-icon>
+        <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<7"></ion-icon>
+        <ion-icon small item-right name="star-outline" *ngIf="!wine.score||wine.score<9"></ion-icon>
+      </ion-item>
+      <ion-item no-lines *ngIf="wine.prix&&wine.vendeur">
+          <b>{{wine.prix}} CFP {{wine.vendeur}}</b> 
+      </ion-item>
+    </ion-card-content>
+    
+  </ion-card>
+
+
+  <ion-item no-lines class="mySearch-item3" *ngIf="showSearchButton">
+    <ion-label ><b>Gammes de prix</b></ion-label>
+  </ion-item>
+  <ion-item no-lines class="mySearch-item2" *ngIf="showSearchButton">
+    <button ion-button color="gris" (tap)="getFilterItems('<1000')">
+      <b>Moins de<br><br>1000</b>
+    </button>
+    <button ion-button  color="gris" (tap)="getFilterItems('1000-2000')">
+      <b>1000<br><br>2000</b>
+    </button>
+    <button ion-button  color="gris" (tap)="getFilterItems('>2000')">
+      <b>Plus de<br><br>2000</b>      
+    </button>
+  </ion-item>
+
+<ion-item no-lines class="mySearch-item3" *ngIf="showSearchButton">
+    <ion-label ><b>Rapport Qualité / Prix</b></ion-label>
+  </ion-item>
+  <ion-item no-lines class="mySearch-item" *ngIf="showSearchButton">
+    <button ion-button  color="bleu" (tap)="getFilterItems('>5')">
+      <ion-icon name="star" color="gris"></ion-icon>
+      <ion-icon name="star" color="gris"></ion-icon>  
+      <ion-icon name="star-half" color="gris"></ion-icon>  
+    </button>
+    <button ion-button  color="bleu" (tap)="getFilterItems('>7')">
+      <ion-icon name="star" color="gris"></ion-icon>
+      <ion-icon name="star" color="gris"></ion-icon> 
+      <ion-icon name="star" color="gris"></ion-icon>  
+      <ion-icon name="star-half" color="gris"></ion-icon>        
+    </button>
+    <button ion-button  color="bleu" (tap)="getFilterItems('>9')">
+      <ion-icon name="star" color="gris"></ion-icon>
+      <ion-icon name="star" color="gris"></ion-icon>
+      <ion-icon name="star" color="gris"></ion-icon>
+      <ion-icon name="star" color="gris"></ion-icon>  
+      <ion-icon name="star-half" color="gris"></ion-icon>     
+    </button>
+  </ion-item>
+
+  <!--<ion-item no-lines class="mySearch-item3" *ngIf="showSearchButton">    
+    <ion-label ><b>Vendeur</b></ion-label>
+  </ion-item>
+
+  <ion-item no-lines class="mySearch-item2" *ngIf="showSearchButton">
+    <ion-slides pager [options]="mySlideOptions" >   
+      
+      <ion-slide *ngFor="let tab of searchResellerList" > 
+        <button ion-button *ngIf="tab[0]" color="gris" >{{tab[0].nom}}</button> 
+        <button ion-button *ngIf="tab[1]" color="gris" >{{tab[1].nom}}</button>   
+        <button ion-button *ngIf="tab[2]" color="gris" >{{tab[2].nom}}</button> 
+      </ion-slide> 
+
+    </ion-slides>
+  </ion-item>-->
+
+  <ion-item no-lines class="mySearch-item3" *ngIf="showSearchButton">    
+    <ion-label ><b>Autres</b></ion-label>
+  </ion-item>
+
+  <ion-item no-lines class="mySearch-item2" *ngIf="showSearchButton">
+    <button ion-button  color="gris" (tap)="searchResellerByName()">
+      <div>
+      <ion-icon name="basket" color="bleu" ></ion-icon>    
+      <br><br>Vendeur    
+      </div>
+    </button>
+    <button ion-button  color="gris" (tap)="scan()">
+      <div>
+      <ion-icon name="barcode" color="bleu" ></ion-icon>  
+      <br><br>Code barre    
+      </div>  
+    </button>
+    <button ion-button  color="gris">
+      <div>
+      <ion-icon name="camera" color="bleu" ></ion-icon>  
+      <br><br>Photo    
+      </div>  
+    </button>
+  </ion-item>
+
+  <ion-item no-lines class="mySearch-item3" *ngIf="showSearchButton">
+    <ion-label ><b>Couleur</b></ion-label>
+  </ion-item>
+
+  <ion-item no-lines class="mySearch-item" *ngIf="showSearchButton">
+    <button ion-button color="primary" (tap)="getFilterItems('rouge')"> Rouge </button>
+    <button ion-button color="rose" (tap)="getFilterItems('rose')"> Rosé </button>
+    <button ion-button color="blanc" (tap)="getFilterItems('blanc')"> Blanc </button>
+  </ion-item>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar color="light" >
+    <button ion-button clear (tap)="showFilter()">Filtres</button>
+    
+    <ion-buttons color="primary" end>
+      <button ion-button color="primary" clear (tap)="reset()">Réinitialiser
+      </button> 
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

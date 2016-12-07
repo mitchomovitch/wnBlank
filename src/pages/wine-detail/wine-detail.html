@@ -23,8 +23,8 @@
   
   <img [src]="wine.photoPath" *ngIf="wine.photoPath"/>  
 
-  <ion-item no-lines *ngIf="!wine.photoPath">
-    <button item-left ion-button clear icon-only (click)="takePicture()"><ion-icon name="camera"></ion-icon></button>
+  <ion-item no-lines *ngIf="!wine.photoPath" (click)="takePicture()">
+    <ion-icon  item-left name="camera"></ion-icon>
     <ion-label *ngIf="!wine.codebarre"> Prendre une photo</ion-label>
   </ion-item>
 
@@ -52,8 +52,8 @@
       <ion-icon range-right name="star"></ion-icon>
   </ion-range>
 
-  <ion-item no-lines>
-    <button item-left ion-button clear icon-only (click)="scan()"><ion-icon name="barcode"></ion-icon></button>
+  <ion-item no-lines (click)="scan()">
+    <ion-icon item-left name="barcode"></ion-icon>
     <ion-label *ngIf="!wine.codebarre"> Code barre</ion-label>
     <ion-label *ngIf="wine.codebarre"> {{wine.codebarre}}</ion-label>
   </ion-item>
@@ -105,7 +105,7 @@
 
   <ion-item no-lines>
     <ion-icon item-left name="paper"></ion-icon>
-    <ion-textarea placeholder="Remarques" rows="4"[(ngModel)]="wine.note" type="text" (change)="elementChanged()"></ion-textarea>
+    <ion-textarea placeholder="Remarques" rows="4"[(ngModel)]="wine.lastNote" type="text" (change)="elementChanged()"></ion-textarea>
   </ion-item>
 
 </ion-content>

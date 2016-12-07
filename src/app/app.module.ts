@@ -1,3 +1,5 @@
+import { SearchDetailPage } from './../pages/search-detail-page/search-detail-page';
+import { SearchMenuPage } from './../pages/search-menu-page/search-menu-page';
 import { UtilData } from './../providers/util-data';
 import { PriceData } from './../providers/price-data';
 import { PriceCreatePage } from './../pages/price-create/price-create';
@@ -40,7 +42,9 @@ import { Storage } from '@ionic/storage';
     ResellerListPage,
     ResellerMapPage,
     ValueListPage,
-    PriceCreatePage
+    PriceCreatePage,
+    SearchMenuPage,
+    SearchDetailPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -60,7 +64,9 @@ import { Storage } from '@ionic/storage';
     ResellerListPage,
     ResellerMapPage,
     ValueListPage,
-    PriceCreatePage
+    PriceCreatePage,    
+    SearchMenuPage,
+    SearchDetailPage
   ],
   providers: [Storage,AuthData,ProfileData,WineData,ResellerData,ConnectivityService,ClassementProfile,
   ListData,PriceData,UtilData]

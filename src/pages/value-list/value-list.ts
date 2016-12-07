@@ -19,6 +19,7 @@ export class ValueListPage {
   items: any[];
 
   constructor(public navCtrl: NavController,public navParams:NavParams, public listData:ListData,public nav: NavController, public events: Events) {
+    
     this.navParams = navParams;
     this.listName=this.navParams.get('listName');
     this.itemList=listData.getList(this.listName);
@@ -30,7 +31,7 @@ export class ValueListPage {
   }
 
   getItems(ev: any) {
-    // Reset items back to all of the items
+    // Reset items back to all of the items 
     this.items=this.itemList;
 
     // set val to the value of the searchbar

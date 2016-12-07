@@ -19,6 +19,7 @@ export class ListData extends FirebaseData{
 
   constructor(public platform:Platform, public storage:Storage, ngZone:NgZone) {
     super(platform,ngZone,storage);
+    
     // init region list
     this.regionRef=firebase.database().ref('valueList/region');
     this.regionList=this.getSynchronizedArray(this.regionRef);

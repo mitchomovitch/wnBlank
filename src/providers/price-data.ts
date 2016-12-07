@@ -1,3 +1,4 @@
+import { ResellerModel } from './../models/reseller-model';
 import { UtilData } from './util-data';
 import { WineModel } from './../models/wine-model';
 import { FirebaseData } from './firebase-data';
@@ -19,8 +20,12 @@ export class PriceData extends FirebaseData{
   public priceRef: any;
   public syncPriceList: any;
 
-  public userProfile:any;
+  public vendorWineListRef: any;
+  public syncVendorWineList: any;
   public priceListToDelete:any[];
+
+  public userProfile:any;
+  public vendorWineListToDelete:any[];
 
   constructor(public platform:Platform, public ngZone:NgZone,public storage: Storage, 
   public util : UtilData, public events:Events) {
@@ -37,6 +42,10 @@ export class PriceData extends FirebaseData{
 
     this.priceRef = firebase.database().ref('priceList');
     this.syncPriceList=this.getSynchronizedArray(this.priceRef);
+
+    this.vendorWineListRef = firebase.database().ref('vendorWineList');
+    this.syncVendorWineList=this.getSynchronizedArray(this.vendorWineListRef);
+
     this.initLocalStorage();
      
   }
@@ -63,6 +72,17 @@ export class PriceData extends FirebaseData{
         this.priceListToDelete=[];
       }
     });
+  
+    this.storage.get('vendorWineList').then(list=>{
+      //console.log('PriceList:'+list);
+      if(list){
+        console.log("use local");
+        var array:any[]=JSON.parse(list);
+        for(var i = 0, len = array.length; i < len; i++) {
+          this.saveVendorWine(array[i]);
+        }
+      }
+    });
   }
 
   getWinePriceList(wine:WineModel): any {
@@ -72,9 +92,20 @@ export class PriceData extends FirebaseData{
       
         return (price.wineId==wine.id);
       });
-    console.log('filter list:'+JSON.stringify(winePriceList));
     return winePriceList;
   }
+  
+  getVendorWineList(vendor:ResellerModel): any {
+
+    var vendorWineList:any[];
+    vendorWineList = this.syncVendorWineList.filter((item) => {
+      
+        return (item.id && item.id==vendor.id);
+      });
+    return vendorWineList;
+  }
+
+
 
   savePrice(price:PriceModel) {  
     if(price.id==null){
@@ -86,6 +117,16 @@ export class PriceData extends FirebaseData{
     }
     this.syncPriceList.set( price.id, price );
     this.storage.set('priceList',JSON.stringify(this.syncPriceList));
+
+    var vendorWines:any=this.syncVendorWineList[this.positionFor(this.syncVendorWineList,price.vendeurId)];
+    
+    if(!vendorWines){
+      vendorWines=[];
+      vendorWines.id=price.vendeurId;
+    }
+    vendorWines[price.wineId]=true;
+    console.log("vendorWines",JSON.stringify(vendorWines))
+    this.saveVendorWine(vendorWines);
   }
 
   removePrice(price:PriceModel) {  
@@ -100,6 +141,18 @@ export class PriceData extends FirebaseData{
       }
       this.storage.set('priceList',JSON.stringify(this.syncPriceList));
     });
+
+    var vendorWines:any=this.syncVendorWineList[this.positionFor(this.syncVendorWineList,price.vendeurId)];  
+    if(vendorWines){
+      delete vendorWines[price.wineId];
+      this.saveVendorWine(vendorWines);
+    }
+    
+  }
+
+  saveVendorWine(vendorWines:any) {  
+    this.syncVendorWineList.set( vendorWines.id, vendorWines );
+    this.storage.set('vendorWineList',JSON.stringify(this.syncVendorWineList));
   }
 
   // méthode surchargé
@@ -109,7 +162,6 @@ export class PriceData extends FirebaseData{
       ref.on('child_added', (snap, prevChild) => {
         this.ngZone.run(()=>{
           var data = snap.val();
-          console.log('price added ',data.wineId);
           data.id = snap.key;
           list.splice(0, 0, data);
           
@@ -125,8 +177,17 @@ export class PriceData extends FirebaseData{
               console.log("syncChanges child delete");
               list.splice(i, 1);
               //mark to delete : add to the delete list
-              this.priceListToDelete.push(data);
-              this.storage.set('priceListToDelete',JSON.stringify(this.priceListToDelete));         
+              if(ref==this.vendorWineListRef){
+                console.log("add vendorWineListToDelete");
+                this.vendorWineListToDelete.push(data);
+                this.storage.set('vendorWineListToDelete',JSON.stringify(this.vendorWineListToDelete)); 
+              }
+              else if(ref==this.priceRef){
+                console.log("add priceListToDelete");
+                this.priceListToDelete.push(data);
+                this.storage.set('priceListToDelete',JSON.stringify(this.priceListToDelete)); 
+              }
+                      
           }
         });
       });
@@ -135,7 +196,6 @@ export class PriceData extends FirebaseData{
         this.ngZone.run(()=>{
           
           var data = snap.val();
-          console.log('price updated ',data.wineId);
           data.id = snap.key; 
             var i = this.positionFor(list, snap.key);
             if( i > -1 ) {

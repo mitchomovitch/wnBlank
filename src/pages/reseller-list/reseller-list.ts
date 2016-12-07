@@ -1,3 +1,4 @@
+import { PriceData } from './../../providers/price-data';
 import { PriceModel } from './../../models/price-model';
 import { ResellerData } from './../../providers/reseller-data';
 import { ResellerModel } from './../../models/reseller-model';
@@ -15,7 +16,7 @@ import { NavController, Events, NavParams } from 'ionic-angular';
 */
 @Component({
   selector: 'page-reseller-list',
-  templateUrl: 'reseller-list.html'
+  templateUrl: 'reseller-list.html'  
 })
 export class ResellerListPage {
 
@@ -23,11 +24,13 @@ export class ResellerListPage {
   public searchResellerList: any[];
   reseller: ResellerModel;
   public price: PriceModel;
+  public wineList:any[];
 
   constructor(public nav: NavController, public navParams: NavParams, public resellerData: ResellerData,
-    private ngZone: NgZone, public events: Events) {
+    private ngZone: NgZone, public events: Events, public priceData : PriceData) {
     this.nav = nav;
     this.price = this.navParams.get('price');
+    this.wineList = this.navParams.get('wineList');
     this.resellerData = resellerData;
     this.resellerList = this.resellerData.getResellerList();
     this.searchResellerList = this.resellerList;
@@ -35,7 +38,7 @@ export class ResellerListPage {
 
   ionViewDidLoad() {
     console.log('Hello ResellerList Page');
-  }
+  }   
 
   getItems(ev: any) {
     // Reset items back to all of the items
@@ -73,10 +76,24 @@ export class ResellerListPage {
 
   }
 
-  selectReseller(reseller: ResellerModel) {
-    this.price.vendeurId = reseller.id;
-    this.price.vendeurName = reseller.nom;
-    this.price.isChanged = true;
+  selectReseller(reseller: ResellerModel) {  
+    if(this.price){
+      this.price.vendeurId = reseller.id;
+      this.price.vendeurName = reseller.nom;
+      this.price.isChanged = true;
+    }
+
+    if(this.wineList){
+      var vendorWineList=this.priceData.getVendorWineList(reseller);
+      vendorWineList=vendorWineList[0];
+      if(vendorWineList){
+          this.wineList = this.wineList.filter((item) => {
+            console.log(item.nom,item.id, vendorWineList[item.id],(item.id && vendorWineList[item.id]!=null))
+            return (item.id && vendorWineList[item.id]);
+          });
+          this.events.publish('searchVendor:filtered', this.wineList,reseller.nom);
+      } 
+    }
     this.nav.pop();
 
   }

@@ -90,7 +90,7 @@ export class ResellerData extends FirebaseData{
     });
   }
 
-  syncChanges(list, ref) {
+  syncChanges(list, ref) {    
   //console.log("syncChanges");
 
   ref.on('child_added', (snap, prevChild) => {
